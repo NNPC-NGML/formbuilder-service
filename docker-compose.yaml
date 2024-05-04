@@ -1,0 +1,47 @@
+version: "3.2"
+services:
+  formbuilder-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "php artisan serve --host=0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - 1060:8000
+    networks:
+      - formbuilder_network
+
+  formbuilder_queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "php artisan queue:work"
+    networks:
+      - automator_network
+
+  mysql:
+    image: mariadb:10.5.8
+    environment:
+      - MYSQL_ROOT_PASSWORD=Ubuxa##99
+      - MYSQL_DATABASE=forge
+      - MYSQL_USER=forge
+      - MYSQL_PASSWORD=Ubuxa##99
+    networks:
+      - formbuilder_network
+  # phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 1061:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PASSWORD=Ubuxa##99
+    networks:
+      - formbuilder_network
+    restart: unless-stopped
+    volumes:
+      - .:/app
+
+networks:
+  formbuilder_network:
