@@ -77,4 +77,31 @@ class FormServiceTest extends TestCase
             'extra_field' => 'Unexpected Data'
         ]);
     }
+
+    public function testGetFormById()
+    {
+        $form = Form::create([
+            'name' => 'Test Form',
+            'json_form' => '{"field": "value"}',
+            'type' => 'survey',
+            'field_structure' => json_encode(['field1' => 'value1']),
+            'access_control' => json_encode(['role1' => 'edit'])
+        ]);
+
+        $response = $this->get(route('forms.show', ['id' => $form->id]));
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'id' => $form->id,
+            'name' => 'Test Form'
+        ]);
+    }
+
+    public function testFormNotFound()
+    {
+        $response = $this->get(route('forms.show', ['id' => 999]));
+
+        $response->assertStatus(404);
+        $response->assertJson(['message' => 'Form not found']);
+    }
 }

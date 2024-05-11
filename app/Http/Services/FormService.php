@@ -9,4 +9,9 @@ class FormService
     {
         return Form::create($data);
     }
+
+    public function getForm(int $formId)
+    {
+        return Form::find($formId);
+    }
 }

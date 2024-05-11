@@ -138,4 +138,16 @@ class FormController extends Controller
         $form = $this->formService->createForm($request->all());
         return response()->json($form, 201);
     }
+
+    public function show($userId)
+    {
+
+        $user = $this->formService->getForm($userId);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        return response()->json(['success' => true, 'data' => new UserResource($user)], 200);
+    }
 }
