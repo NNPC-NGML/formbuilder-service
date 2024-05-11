@@ -83,7 +83,6 @@ class FormServiceTest extends TestCase
         $form = Form::create([
             'name' => 'Test Form',
             'json_form' => '{"field": "value"}',
-            'type' => 'survey',
             'field_structure' => json_encode(['field1' => 'value1']),
             'access_control' => json_encode(['role1' => 'edit'])
         ]);
