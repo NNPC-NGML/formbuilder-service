@@ -33,6 +33,10 @@ class FormServiceTest extends TestCase
                     'required' => true,
                     'placeholder' => 'Enter Field 1'
                 ]
+            ],
+            'access_control' => [
+                ['user' => 'user1', 'role' => 'editor'],
+                ['user' => 'user2', 'role' => 'viewer']
             ]
         ];
 
