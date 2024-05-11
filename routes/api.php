@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FormController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
@@ -20,6 +21,7 @@ Route::middleware('scope.user')->group(function () {
     Route::get('/protected', function () {
         return response()->json(['message' => 'Access granted']);
     });
+    Route::get('/forms/{id}', [FormController::class, 'show'])->name('forms.show');
 });
 
 
