@@ -25,7 +25,7 @@ class FormServiceTest extends TestCase
             'name' => 'Test Form',
             'json_form' => '{"field1": "value1"}',
             'active' => true,
-            'fields' => [
+            'field_structure' => [
                 [
                     'fieldId' => 'field1',
                     'name' => 'Field 1',
