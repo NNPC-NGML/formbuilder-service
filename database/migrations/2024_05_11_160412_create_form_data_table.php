@@ -10,7 +10,7 @@ class CreateFormDataTable extends Migration
     {
         Schema::create('form_data', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_id')->constrained('forms')->onDelete('cascade');
+            $table->foreignId('form_builder_id')->constrained('form_builders')->onDelete('cascade');
             $table->json('form_field_answers');
             $table->timestamps();
         });

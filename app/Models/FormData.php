@@ -10,7 +10,7 @@ class FormData extends Model
     use HasFactory;
 
     protected $fillable = [
-        'form_id', 'form_field_answers'
+        'form_builder_id', 'form_field_answers'
     ];
 
     protected $casts = [
@@ -19,6 +19,6 @@ class FormData extends Model
 
     public function formBuilder()
     {
-        return $this->belongsTo(Form::class, 'form_id');
+        return $this->belongsTo(FormBuilder::class, 'form_builder_id');
     }
 }

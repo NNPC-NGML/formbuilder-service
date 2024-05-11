@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FormResource;
 use App\Services\FormService;
 use Illuminate\Http\Request;
-use App\Http\Resources\FormResource;
+
+
+/**
+ * @OA\Info(
+ *     title="Formbuilder Service ",
+ *     version="0.1"
+ * )
+ */
 class FormController extends Controller
 {
 

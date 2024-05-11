@@ -3,7 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Form extends Model
+class FormBuilder extends Model
 {
     protected $fillable = [
         'name',
@@ -22,6 +22,6 @@ class Form extends Model
 
     public function formData()
     {
-        return $this->hasMany(FormData::class, 'form_id');
+        return $this->hasMany(FormData::class, 'form_builder_id');
     }
 }
