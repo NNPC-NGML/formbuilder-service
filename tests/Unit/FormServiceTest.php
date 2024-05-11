@@ -83,7 +83,10 @@ class FormServiceTest extends TestCase
             'name' => 'Test Form',
             'json_form' => '{"field": "value"}',
             'field_structure' => json_encode(['field1' => 'value1']),
-            'access_control' => json_encode(['user' => 'edit'])
+            'access_control' => [
+                ['user' => 'user1', 'role' => 'editor'],
+                ['user' => 'user2', 'role' => 'viewer']
+            ]
         ]);
 
         $response = $this->get(route('forms.show', ['id' => $form->id]));

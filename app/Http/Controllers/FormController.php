@@ -139,6 +139,32 @@ class FormController extends Controller
         return response()->json($form, 201);
     }
 
+
+      /**
+     * @OA\Get(
+     *     path="/api/forms/{id}",
+     *     tags={"Forms"},
+     *     summary="Retrieve a form by ID",
+     *     description="Returns a single form.",
+     *     operationId="getForm",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the form to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Form")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Form not found"
+     *     )
+     * )
+     */
      public function show($id)
     {
         $form = $this->formService->getForm($id);
