@@ -54,7 +54,7 @@ class FormServiceTest extends TestCase
             'json_form' => '{"field1": "value1"}'
         ];
 
-        $this->expectException(\Exception::class); // Expecting exception due to validation or handling
+        $this->expectException(\Exception::class);
 
         $this->formService->createForm($formData);
     }

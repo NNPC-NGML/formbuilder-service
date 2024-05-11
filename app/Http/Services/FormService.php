@@ -8,6 +8,5 @@ class FormService
     public function createForm($data)
     {
         return Form::create($data);
-
     }
 }
