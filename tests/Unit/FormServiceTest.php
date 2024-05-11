@@ -22,7 +22,7 @@ class FormServiceTest extends TestCase
     public function testCreateFormSuccess()
     {
         $formData = [
-            'title' => 'Test Form',
+            'name' => 'Test Form',
             'json_form' => '{"field1": "value1"}',
             'active' => true,
             'fields' => [
@@ -40,17 +40,17 @@ class FormServiceTest extends TestCase
         $form = $this->formService->createForm($formData);
 
         $this->assertDatabaseHas('forms', [
-            'title' => 'Test Form'
+            'name' => 'Test Form'
         ]);
 
         $this->assertInstanceOf(Form::class, $form);
-        $this->assertEquals('Test Form', $form->title);
+        $this->assertEquals('Test Form', $form->name);
     }
 
     public function testCreateFormValidationFailure()
     {
         $formData = [
-            // 'title' is required but missing
+            // 'name' is required but missing
             'json_form' => '{"field1": "value1"}'
         ];
 
@@ -62,7 +62,7 @@ class FormServiceTest extends TestCase
     public function testCreateFormWithUnexpectedData()
     {
         $formData = [
-            'title' => 'Test Form',
+            'name' => 'Test Form',
             'json_form' => '{"field1": "value1"}',
             'extra_field' => 'Unexpected Data'
         ];
@@ -70,7 +70,7 @@ class FormServiceTest extends TestCase
         $form = $this->formService->createForm($formData);
 
         $this->assertDatabaseHas('forms', [
-            'title' => 'Test Form'
+            'name' => 'Test Form'
         ]);
 
         $this->assertDatabaseMissing('forms', [
