@@ -53,7 +53,6 @@ class FormServiceTest extends TestCase
     public function testCreateFormValidationFailure()
     {
         $formData = [
-            // 'name' is required but missing
             'json_form' => '{"field1": "value1"}'
         ];
 
