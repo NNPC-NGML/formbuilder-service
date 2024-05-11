@@ -12,7 +12,7 @@ class Form extends Model
         'access_control',
         'process_flow_id',
         'automator_flow_id',
-        'task'
+        'task_id'
     ];
 
     protected $casts = [
