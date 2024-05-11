@@ -13,7 +13,7 @@ class CreateFormsTable extends Migration
      */
     public function up()
     {
-        Schema::create('forms', function (Blueprint $table) {
+        Schema::create('form_builders', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment("This column would hold the name of the form builder created");;
             $table->text('json_form')->comment("This column would hold the Json of the form builder to be rendered on the FE");

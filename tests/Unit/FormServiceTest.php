@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Form;
+use App\Models\FormBuilder;
 use App\Services\FormService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -46,7 +46,7 @@ class FormServiceTest extends TestCase
             'name' => 'Test Form'
         ]);
 
-        $this->assertInstanceOf(Form::class, $form);
+        $this->assertInstanceOf(FormBuilder::class, $form);
         $this->assertEquals('Test Form', $form->name);
     }
 

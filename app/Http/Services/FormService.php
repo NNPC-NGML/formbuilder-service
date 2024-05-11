@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Form;
+use App\Models\FormBuilder;
 class FormService
 {
-    public function createForm($data): Form
+    public function createForm($data): FormBuilder
     {
-        return Form::create($data);
+        return FormBuilder::create($data);
     }
 }
