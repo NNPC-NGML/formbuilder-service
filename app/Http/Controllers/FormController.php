@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\FormService;
 use Illuminate\Http\Request;
-
+use App\Http\Resources\FormResource;
 class FormController extends Controller
 {
 
@@ -139,15 +139,14 @@ class FormController extends Controller
         return response()->json($form, 201);
     }
 
-    public function show($userId)
+     public function show($id)
     {
+        $form = $this->formService->getForm($id);
 
-        $user = $this->formService->getForm($userId);
-
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+        if (!$form) {
+            return response()->json(['message' => 'Form not found'], 404);
         }
 
-        return response()->json(['success' => true, 'data' => new UserResource($user)], 200);
+        return new FormResource($form);
     }
 }

@@ -10,7 +10,7 @@ class FormService
         return Form::create($data);
     }
 
-    public function getForm(int $formId)
+    public function getForm(int $formId): Form
     {
         return Form::find($formId);
     }

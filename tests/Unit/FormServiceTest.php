@@ -83,7 +83,7 @@ class FormServiceTest extends TestCase
             'name' => 'Test Form',
             'json_form' => '{"field": "value"}',
             'field_structure' => json_encode(['field1' => 'value1']),
-            'access_control' => json_encode(['role1' => 'edit'])
+            'access_control' => json_encode(['user' => 'edit'])
         ]);
 
         $response = $this->get(route('forms.show', ['id' => $form->id]));
@@ -97,7 +97,9 @@ class FormServiceTest extends TestCase
 
     public function testFormNotFound()
     {
-        $response = $this->get(route('forms.show', ['id' => 999]));
+        $nonExistentForId = mt_rand(1000000000, 9999999999);
+
+        $response = $this->get(route('forms.show', ['id' => $nonExistentForId]));
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Form not found']);
