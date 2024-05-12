@@ -50,21 +50,4 @@ class FormBuilderQueueTest extends TestCase
             'name' => $formData['name'],
         ]);
     }
-    //  public function test_it_dispatches_department_creation_job_functionality(): void
-    // {
-    //     Queue::fake();
-
-    //     $request = [
-    //         'name' => 'Mercury',
-    //         'id' => 5634,
-    //         'created_at' => '',
-    //         'updated_at' => '',
-    //     ];
-
-    //     DepartmentCreated::dispatch($request);
-
-    //     Queue::assertPushed(DepartmentCreated::class, function ($job) use ($request) {
-    //         return $job->getData() == $request;
-    //     });
-    // }
 }
