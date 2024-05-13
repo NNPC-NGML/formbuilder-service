@@ -31,8 +31,8 @@ class FormService
         return FormBuilder::create($data);
     }
 
-    public function getForm(int $formId): FormBuilder
+    public function getForm(int $id): FormBuilder
     {
-        return FormBuilder::find($formId);
+        return FormBuilder::find($id);
     }
 }

@@ -173,7 +173,7 @@ class FormController extends Controller
      *     )
      * )
      */
-     public function show($id)
+     public function show(int $id)
     {
         $form = $this->formService->getForm($id);
 
