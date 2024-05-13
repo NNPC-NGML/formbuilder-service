@@ -71,43 +71,51 @@ class FormServiceTest extends TestCase
 
         $form = $this->formService->createForm($formData);
 
+        $this->assertInstanceOf(FormBuilder::class, $form);
+
+
         $this->assertDatabaseHas('forms', [
-            'name' => 'Test Form'
+            'name' => $formData['name']
         ]);
 
         $this->assertDatabaseMissing('forms', [
             'extra_field' => 'Unexpected Data'
         ]);
     }
-
-    public function testGetFormById()
+    public function testGetFormReturnsFormWhenExists()
     {
-        $form = Form::create([
+        $formBuilder = FormBuilder::create([
             'name' => 'Test Form',
-            'json_form' => '{"field": "value"}',
-            'field_structure' => json_encode(['field1' => 'value1']),
+            'json_form' => '{"field1": "value1"}',
+            'field_structure' => [
+                [
+                    'fieldId' => 'field1',
+                    'name' => 'Field 1',
+                    'label' => 'Field One',
+                    'inputType' => 'text',
+                    'required' => true,
+                    'placeholder' => 'Enter Field 1'
+                ]
+            ],
             'access_control' => [
                 ['user' => 'user1', 'role' => 'editor'],
                 ['user' => 'user2', 'role' => 'viewer']
             ]
         ]);
 
-        $response = $this->get(route('forms.show', ['id' => $form->id]));
+        $result = $this->formService->getForm($formBuilder->id);
 
-        $response->assertStatus(200);
-        $response->assertJson([
-            'id' => $form->id,
-            'name' => 'Test Form'
-        ]);
+        $this->assertNotNull($result);
+        $this->assertInstanceOf(FormBuilder::class, $result);
+        $this->assertEquals($formBuilder->id, $result->id);
     }
 
-    public function testFormNotFound()
+    public function testGetFormReturnsNullWhenNoFormExists()
     {
         $nonExistentForId = mt_rand(1000000000, 9999999999);
 
-        $response = $this->get(route('forms.show', ['id' => $nonExistentForId]));
+        $result = $this->formService->getForm($nonExistentForId);
 
-        $response->assertStatus(404);
-        $response->assertJson(['message' => 'Form not found']);
+        $this->assertNull($result);
     }
 }
