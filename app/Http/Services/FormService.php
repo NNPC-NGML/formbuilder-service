@@ -30,4 +30,9 @@ class FormService
         }
         return FormBuilder::create($data);
     }
+
+    public function getForm(int $formId): Form
+    {
+        return Form::find($formId);
+    }
 }

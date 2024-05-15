@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Services\FormService;
 use Illuminate\Http\Request;
 
+use App\Http\Resources\FormResource;
+
+
 
 /**
  * @OA\Info(
@@ -12,6 +15,7 @@ use Illuminate\Http\Request;
  *     version="0.1"
  * )
  */
+
 class FormController extends Controller
 {
 
@@ -144,5 +148,42 @@ class FormController extends Controller
     {
         $form = $this->formService->createForm($request->all());
         return response()->json($form, 201);
+    }
+
+
+      /**
+     * @OA\Get(
+     *     path="/api/forms/{id}",
+     *     tags={"Forms"},
+     *     summary="Retrieve a form by ID",
+     *     description="Returns a single form.",
+     *     operationId="getForm",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the form to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Form")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Form not found"
+     *     )
+     * )
+     */
+     public function show($id)
+    {
+        $form = $this->formService->getForm($id);
+
+        if (!$form) {
+            return response()->json(['message' => 'Form not found'], 404);
+        }
+
+        return new FormResource($form);
     }
 }

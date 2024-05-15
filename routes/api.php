@@ -21,6 +21,7 @@ Route::middleware('scope.user')->group(function () {
     Route::get('/protected', function () {
         return response()->json(['message' => 'Access granted']);
     });
+    Route::get('/forms/{id}', [FormController::class, 'show'])->name('forms.show');
     Route::post('/forms', [FormController::class, 'create'])->name('forms.create');
 });
 
