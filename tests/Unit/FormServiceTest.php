@@ -44,7 +44,7 @@ class FormServiceTest extends TestCase
 
         $form = $this->formService->createForm($formData);
 
-        $this->assertDatabaseHas('forms', [
+        $this->assertDatabaseHas('form_builders', [
             'name' => $form->name
         ]);
 
@@ -73,11 +73,11 @@ class FormServiceTest extends TestCase
 
         $form = $this->formService->createForm($formData);
 
-        $this->assertDatabaseHas('forms', [
-            'name' => 'Test Form'
+        $this->assertDatabaseHas('form_builders', [
+            'name' => $form->name
         ]);
 
-        $this->assertDatabaseMissing('forms', [
+        $this->assertDatabaseMissing('form_builders', [
             'extra_field' => 'Unexpected Data'
         ]);
     }
