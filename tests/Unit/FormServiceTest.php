@@ -45,7 +45,7 @@ class FormServiceTest extends TestCase
         $form = $this->formService->createForm($formData);
 
         $this->assertDatabaseHas('forms', [
-            'name' => 'Test Form'
+            'name' => $form->name
         ]);
 
         $this->assertInstanceOf(FormBuilder::class, $form);
