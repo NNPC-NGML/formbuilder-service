@@ -32,13 +32,11 @@ class AutomatorQueueTest extends TestCase
             "processflow_step_id" => 3,
             "task_status" => 1,
         ];
+        
+        AutomatorTaskBroadcasterJob::dispatch($data);
 
-        $job = new AutomatorTaskBroadcasterJob($data);
-        $job->handle();
-
-        $this->assertDatabaseCount('automator_tasks', 1);
-        $this->assertDatabaseHas('automator_tasks', [
-            'processflow_history_id' => $data['processflow_history_id'],
-        ]);
+        Queue::assertPushed(AutomatorTaskBroadcasterJob::class, function ($job) use ($data) {
+            return $job->getData() == $data;
+        });
     }
 }

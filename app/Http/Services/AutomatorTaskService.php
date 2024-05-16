@@ -1,21 +1,19 @@
 <?php
 namespace App\Service;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AutomatorTaskService
 {
 
     /**
-     * Create a new process flow.
+     * Create a new automator flow.
      *
-     * @param  Request  $request
+     * @param  array  $data
      * @return object
      */
     public function createAutomatorFlow(array $data): object
     {
-
         // Validate the request data
         $validator = Validator::make($data, [
             "processflow_history_id" => "sometimes|nullable|integer",
@@ -29,7 +27,7 @@ class AutomatorTaskService
         if ($validator->fails()) {
             return $validator->errors();
         }
-        //Save Task
-        return (object)array(); //Temp. returning empty Obj
+        //TODO:: KEEP RECORD OF Task
+        return (object)array($data);
     }
 }
