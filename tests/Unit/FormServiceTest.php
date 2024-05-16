@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\FormBuilder;
 use App\Services\FormService;
+use Database\Factories\FormBuilderFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -21,6 +22,7 @@ class FormServiceTest extends TestCase
 
     public function testCreateFormSuccess()
     {
+
         $formData = [
             'name' => 'Test Form',
             'json_form' => '{"field1": "value1"}',
@@ -35,15 +37,15 @@ class FormServiceTest extends TestCase
                 ]
             ],
             'access_control' => [
-                ['user' => 'user1', 'role' => 'editor'],
-                ['user' => 'user2', 'role' => 'viewer']
+                ['user' => 1, 'role' => 'editor'],
+                ['user' => 2, 'role' => 'viewer']
             ]
         ];
 
         $form = $this->formService->createForm($formData);
 
-        $this->assertDatabaseHas('forms', [
-            'name' => 'Test Form'
+        $this->assertDatabaseHas('form_builders', [
+            'name' => $form->name
         ]);
 
         $this->assertInstanceOf(FormBuilder::class, $form);
@@ -71,33 +73,26 @@ class FormServiceTest extends TestCase
 
         $form = $this->formService->createForm($formData);
 
-        $this->assertDatabaseHas('forms', [
-            'name' => 'Test Form'
+        $this->assertDatabaseHas('form_builders', [
+            'name' => $form->name
         ]);
 
-        $this->assertDatabaseMissing('forms', [
+        $this->assertDatabaseMissing('form_builders', [
             'extra_field' => 'Unexpected Data'
         ]);
     }
 
     public function testGetFormById()
     {
-        $form = Form::create([
-            'name' => 'Test Form',
-            'json_form' => '{"field": "value"}',
-            'field_structure' => json_encode(['field1' => 'value1']),
-            'access_control' => [
-                ['user' => 'user1', 'role' => 'editor'],
-                ['user' => 'user2', 'role' => 'viewer']
-            ]
-        ]);
+        $form_builder = FormBuilderFactory::factory()->create();
 
-        $response = $this->get(route('forms.show', ['id' => $form->id]));
+
+        $response = $this->get(route('forms.show', ['id' => $form_builder->id]));
 
         $response->assertStatus(200);
         $response->assertJson([
-            'id' => $form->id,
-            'name' => 'Test Form'
+            'id' => $form_builder->id,
+            'name' => $form_builder->name
         ]);
     }
 

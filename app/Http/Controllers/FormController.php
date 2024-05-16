@@ -6,8 +6,7 @@ use App\Services\FormService;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\FormResource;
-
-
+use App\Jobs\FormBuilderCreated;
 
 /**
  * @OA\Info(
@@ -147,6 +146,7 @@ class FormController extends Controller
     public function create(Request $request)
     {
         $form = $this->formService->createForm($request->all());
+        FormBuilderCreated::dispatch($form->toArray());
         return response()->json($form, 201);
     }
 
