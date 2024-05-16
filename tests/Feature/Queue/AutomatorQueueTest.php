@@ -20,7 +20,7 @@ class AutomatorQueueTest extends TestCase
         $this->service = $this->app->make(AutomatorTaskService::class);
     }
 
-    public function test_it_handles_department_creation_job_correctly(): void
+    public function test_it_handles_automator_creation_job_correctly(): void
     {
         Queue::fake();
 
@@ -32,7 +32,7 @@ class AutomatorQueueTest extends TestCase
             "processflow_step_id" => 3,
             "task_status" => 1,
         ];
-        
+
         AutomatorTaskBroadcasterJob::dispatch($data);
 
         Queue::assertPushed(AutomatorTaskBroadcasterJob::class, function ($job) use ($data) {
