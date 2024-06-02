@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Queue;
 
-use App\Jobs\AutomatorTaskBroadcasterJob;
-use App\Service\AutomatorTaskService;
+use App\Jobs\Automator\AutomatorTaskBroadcasterJob;
+use App\Services\AutomatorTaskService;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\RefreshDatabase;

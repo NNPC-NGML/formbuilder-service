@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Queue;
 
-use App\Jobs\CustomerTaskBroadcasterJob;
-use App\Service\CustomerService;
+use App\Jobs\Customer\CustomerTaskBroadcasterJob;
+use App\Services\CustomerService;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
