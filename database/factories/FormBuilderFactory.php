@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\FormBuilder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class FormBuilderFactory extends Factory
 {
+    protected $model = FormBuilder::class;
+
     /**
      * Define the model's default state.
      *

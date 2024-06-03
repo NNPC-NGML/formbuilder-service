@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Automator;
 
 use App\Service\AutomatorTaskService;
 use Illuminate\Bus\Queueable;

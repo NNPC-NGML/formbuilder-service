@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\ProcessFlow;
 
 use App\Service\ProcessFlowTaskService;
 use Illuminate\Bus\Queueable;

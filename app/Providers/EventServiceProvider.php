@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Jobs\AutomatorTaskBroadcasterJob;
+use App\Jobs\CustomerTaskBroadcasterJob;
 use App\Jobs\ProcessFlowTaskBroadcasterJob;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -29,6 +30,8 @@ class EventServiceProvider extends ServiceProvider
     {
         \App::bindMethod(AutomatorTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
         \App::bindMethod(ProcessFlowTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
+        \App::bindMethod(CustomerTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
+
 
     }
 

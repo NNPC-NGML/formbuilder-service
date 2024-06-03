@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Queue;
 
-use App\Jobs\FormBuilderCreated;
+use App\Jobs\FormBuilder\FormBuilderCreated;
+use App\Models\FormBuilder;
 use Tests\TestCase;
-use Database\Factories\FormBuilderFactory;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -19,7 +19,7 @@ class FormQueueTest extends TestCase
     {
         Queue::fake();
 
-        $form_builder = FormBuilderFactory::factory()->create();
+        $form_builder = FormBuilder::factory()->create();
 
         FormBuilderCreated::dispatch($form_builder->toArray());
 

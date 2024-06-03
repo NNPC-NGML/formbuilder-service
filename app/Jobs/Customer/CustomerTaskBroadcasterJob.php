@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Jobs\FormBuilder;
+namespace App\Jobs\Customer;
 
+use App\Service\CustomerService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class FormBuilderCreated implements ShouldQueue
+class CustomerTaskBroadcasterJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,7 +27,8 @@ class FormBuilderCreated implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        $service = new  CustomerService();
+        $service->createCustomerJob($this->data);
     }
 
     public function getData(): array

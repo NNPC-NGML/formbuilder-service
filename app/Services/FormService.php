@@ -21,7 +21,7 @@ class FormService
             'field_structure.*.required' => 'required|boolean',
             'field_structure.*.placeholder' => 'nullable|string',
             'access_control' => 'sometimes|array',
-            'access_control.*.user' => 'sometimes|string',
+            'access_control.*.user' => 'sometimes|integer',
             'access_control.*.role' => 'sometimes|string',
         ]);
 

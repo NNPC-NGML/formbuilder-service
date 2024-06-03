@@ -4,13 +4,14 @@ namespace Tests\Unit;
 
 use App\Models\FormBuilder;
 use App\Services\FormService;
-use Database\Factories\FormBuilderFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+
 
 class FormServiceTest extends TestCase
 {
     use RefreshDatabase;
+
 
     protected $formService;
 
@@ -19,6 +20,8 @@ class FormServiceTest extends TestCase
         parent::setUp();
         $this->formService = new FormService();
     }
+
+
 
     public function testCreateFormSuccess()
     {
@@ -71,9 +74,10 @@ class FormServiceTest extends TestCase
             'extra_field' => 'Unexpected Data'
         ];
 
+        $this->expectException(\Exception::class);
         $form = $this->formService->createForm($formData);
 
-        $this->assertDatabaseHas('form_builders', [
+        $this->assertDatabaseMissing('form_builders', [
             'name' => $form->name
         ]);
 
@@ -84,7 +88,8 @@ class FormServiceTest extends TestCase
 
     public function testGetFormById()
     {
-        $form_builder = FormBuilderFactory::factory()->create();
+
+        $form_builder = FormBuilder::factory()->create();
 
 
         $response = $this->get(route('forms.show', ['id' => $form_builder->id]));

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Queue;
 
-use App\Jobs\ProcessFlowTaskBroadcasterJob;
-use App\Service\ProcessFlowTaskService;
+use App\Jobs\ProcessFlow\ProcessFlowTaskBroadcasterJob;
+use App\Services\ProcessFlowTaskService;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
