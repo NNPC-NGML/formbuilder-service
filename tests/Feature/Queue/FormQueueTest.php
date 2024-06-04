@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Queue;
 
-use App\Jobs\FormBuilder\FormBuilderCreated;
+use App\Jobs\Formbuilder\FormBuilderCreated;
 use App\Models\FormBuilder;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;

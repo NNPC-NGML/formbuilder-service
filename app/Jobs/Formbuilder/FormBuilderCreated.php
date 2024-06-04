@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\FormBuilder;
+namespace App\Jobs\Formbuilder;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
