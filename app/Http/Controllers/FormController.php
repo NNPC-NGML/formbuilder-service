@@ -2,9 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\FormBuilder\FormBuilderCreated;
 use App\Services\FormService;
 use Illuminate\Http\Request;
+
 use App\Http\Resources\FormResource;
+
+/**
+ * @OA\Info(
+ *     title="Formbuilder Service ",
+ *     version="0.1"
+ * )
+ */
 class FormController extends Controller
 {
 
@@ -136,6 +145,7 @@ class FormController extends Controller
     public function create(Request $request)
     {
         $form = $this->formService->createForm($request->all());
+        FormBuilderCreated::dispatch($form->toArray());
         return response()->json($form, 201);
     }
 

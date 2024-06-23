@@ -2,19 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Form;
+use App\Models\FormBuilder;
 use App\Models\FormData;
 class FormService
 {
-    public function createForm($data): Form
+    public function createForm($data): FormBuilder
     {
-        //dispatch actions
-        return Form::create($data);
+        return FormBuilder::create($data);
     }
 
-    public function getForm(int $formId): Form
+    public function getForm(int $formId): FormBuilder
     {
-        return Form::find($formId);
+        return FormBuilder::find($formId);
     }
 
     public function createFormData(array $data): FormData

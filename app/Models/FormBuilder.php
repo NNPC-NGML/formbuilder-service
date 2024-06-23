@@ -1,10 +1,12 @@
 <?php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Form extends Model
+class FormBuilder extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'name',
         'json_form',
@@ -22,6 +24,6 @@ class Form extends Model
 
     public function formData()
     {
-        return $this->hasMany(FormData::class, 'form_id');
+        return $this->hasMany(FormData::class, 'form_builder_id');
     }
 }

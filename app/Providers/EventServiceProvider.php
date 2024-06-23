@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Jobs\Form\FormDataCreated;
+use App\Jobs\Automator\AutomatorTaskBroadcasterJob;
+use App\Jobs\Customer\CustomerTaskBroadcasterJob;
+use App\Jobs\ProcessFlow\ProcessFlowTaskBroadcasterJob;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,10 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         \App::bindMethod(FormDataCreated::class . '@handle', fn($job) => $job->handle());
+        \App::bindMethod(AutomatorTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
+        \App::bindMethod(ProcessFlowTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
+        \App::bindMethod(CustomerTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
+
 
     }
 
