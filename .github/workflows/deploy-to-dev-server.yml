@@ -1,4 +1,4 @@
-name: nnpc_notification_deploy
+name: nnpc_formbuilder_deploy
 
 on:
   # push:
@@ -10,7 +10,7 @@ on:
     types: [closed]
 
 jobs:
-  deploy-notification-test:
+  deploy-formbuilder-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -30,7 +30,7 @@ jobs:
       - name: Run Tests
         run: CI=false php artisan test
 
-  deploy-notification-dev:
+  deploy-formbuilder-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -57,7 +57,7 @@ jobs:
         run: |
           sed -i -e 's:/public/index.php:/index.php:g' public/index.php &&
           sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' public/index.php &&
-          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_nnpc_notification:g' .env &&
+          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_nnpc_formbuilder:g' .env &&
           sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_nnpc:g' .env  &&
           sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' public/index.php &&
           sed -i -e 's:DB_PASSWORD=forge:DB_PASSWORD=nnpcNGML:g' .env &&
@@ -76,8 +76,8 @@ jobs:
           rsync --delete -va -e 'ssh -p 7822 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             app database phpunit.xml storage vendor artisan .env tests bootstrap \
             composer.json resources composer.lock routes config package.json \
-            public/ public skillz@185.160.67.60:nnpc/api/notification
+            public/ public skillz@185.160.67.60:nnpc/api/formbuilder
 
       - name: SSH and effect migration
         run: |
-          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60 "cd nnpc/api/notification && php artisan migrate"
+          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60 "cd nnpc/api/formbuilder && php artisan migrate"

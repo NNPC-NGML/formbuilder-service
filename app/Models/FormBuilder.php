@@ -21,4 +21,9 @@ class FormBuilder extends Model
         'field_structure' => 'array',
         'access_control' => 'array'
     ];
+
+    public function formData()
+    {
+        return $this->hasMany(FormData::class, 'form_builder_id');
+    }
 }

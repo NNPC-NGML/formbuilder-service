@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Automator;
 
-use App\Service\AutomatorTaskService;
+use App\Services\AutomatorTaskService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

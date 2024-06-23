@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Customer;
 
-use App\Service\CustomerService;
+use App\Services\CustomerService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
