@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Queue;
 
+use App\Jobs\Formbuilder\FormDataCreated;
 use App\Services\FormService;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
@@ -41,7 +42,7 @@ class FormBuilderQueueTest extends TestCase
                 ['user' => 1, 'role' => 'viewer']
             ]
         ];
-        $job = new FormDataCreated($formData);
+        $job = new FormDataCreated($formData); //check test
         $job->handle($this->service);
 
         $this->assertDatabaseCount('form_builders', 1);
