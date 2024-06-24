@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
-class FormQueueTest extends TestCase
+class FormBuilderQueueTest extends TestCase
 {
 
 
