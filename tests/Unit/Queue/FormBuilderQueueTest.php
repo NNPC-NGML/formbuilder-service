@@ -42,7 +42,7 @@ class FormBuilderQueueTest extends TestCase
                 ['user' => 1, 'role' => 'viewer']
             ]
         ];
-        $job = new FormDataCreated($formData); //check test
+        $job = new FormDataCreated($formData);
         $job->handle($this->service);
 
         $this->assertDatabaseCount('form_builders', 1);
