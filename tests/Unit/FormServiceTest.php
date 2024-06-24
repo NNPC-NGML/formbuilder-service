@@ -3,7 +3,9 @@
 namespace Tests\Unit;
 
 use App\Models\FormBuilder;
+use App\Models\FormData;
 use App\Services\FormService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -112,4 +114,108 @@ class FormServiceTest extends TestCase
     //     $response->assertStatus(404);
     //     $response->assertJson(['message' => 'Form not found']);
     // }
+
+    public function testGetFormReturnsForm()
+    {
+        // Arrange
+        $form = FormBuilder::create([
+            'name' => 'Test Form',
+            'json_form' => '{"field1": "value1"}',
+            'field_structure' => [
+                [
+                    'fieldId' => 'field1',
+                    'name' => 'Field 1',
+                    'label' => 'Field One',
+                    'inputType' => 'text',
+                    'required' => true,
+                    'placeholder' => 'Enter Field 1'
+                ]
+            ],
+            'access_control' => [
+                ['user' => 1, 'role' => 'editor'],
+                ['user' => 2, 'role' => 'viewer']
+            ]
+        ]);
+
+
+        // Act
+        $result = $this->formService->getForm($form->id);
+
+        // Assert
+        $this->assertInstanceOf(FormBuilder::class, $result);
+        $this->assertEquals($form->id, $result->id);
+        $this->assertEquals('Test Form', $result->name);
+        $this->assertEquals('{"field1": "value1"}', $result->json_form);
+        $this->assertEquals($form->field_structure, $result->field_structure);
+        $this->assertEquals($form->access_control, $result->access_control);
+    }
+
+
+    public function testGetFormNotFound()
+    {
+        $nonExistentId = 999;
+
+
+        $this->expectException(ModelNotFoundException::class);
+        $this->expectExceptionMessage("FormBuilder with id $nonExistentId not found.");
+
+        $this->formService->getForm($nonExistentId);
+    }
+
+    public function testGetFormDataReturnsFormData()
+    {
+        $form = FormBuilder::create([
+            'name' => 'Test Form Data',
+            'json_form' => '{"field1": "value1"}',
+            'field_structure' => [
+                [
+                    'fieldId' => 'field1',
+                    'name' => 'Field 1',
+                    'label' => 'Field One',
+                    'inputType' => 'text',
+                    'required' => true,
+                    'placeholder' => 'Enter Field 1'
+                ]
+            ],
+            'access_control' => [
+                ['user' => 1, 'role' => 'editor'],
+                ['user' => 2, 'role' => 'viewer']
+            ]
+        ]);
+
+        $formDataData = [
+            'form_builder_id' => $form->id,
+            'form_field_answers' => json_encode(['field1' => 'answer1'])
+        ];
+
+        $formDataCreated = FormData::create($formDataData);
+
+        $storedFormData = FormData::find($formDataCreated->id);
+        $storedJson = $storedFormData->form_field_answers;
+
+        $this->assertEquals(
+            json_encode(['field1' => 'answer1']),
+            $storedJson,
+            'The JSON stored in the database does not match the expected value.'
+        );
+
+        $this->assertInstanceOf(FormData::class, $formDataCreated);
+        $this->assertEquals($form->id, $formDataCreated->form_builder_id);
+
+        $result = $this->formService->getFormData($formDataCreated->id);
+
+        $this->assertInstanceOf(FormData::class, $result);
+        $this->assertEquals($formDataCreated->id, $result->id);
+        $this->assertEquals($form->id, $result->form_builder_id);
+    }
+
+    public function testGetFormDataNotFound()
+    {
+        $nonExistentId = 999;
+
+        $this->expectException(ModelNotFoundException::class);
+        $this->expectExceptionMessage("FormData with id $nonExistentId not found.");
+
+        $this->formService->getFormData($nonExistentId);
+    }
 }

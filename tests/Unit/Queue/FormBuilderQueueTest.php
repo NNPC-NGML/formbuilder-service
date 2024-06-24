@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Queue;
 
-use App\Jobs\Form\FormDataCreated;
+use App\Jobs\Formbuilder\FormDataCreated;
 use App\Services\FormService;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
@@ -38,8 +38,8 @@ class FormBuilderQueueTest extends TestCase
                 ]
             ],
             'access_control' => [
-                ['user' => 'user1', 'role' => 'editor'],
-                ['user' => 'user2', 'role' => 'viewer']
+                ['user' => 1, 'role' => 'editor'],
+                ['user' => 1, 'role' => 'viewer']
             ]
         ];
         $job = new FormDataCreated($formData);

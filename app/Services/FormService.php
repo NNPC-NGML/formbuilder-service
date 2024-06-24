@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\FormBuilder;
+use App\Models\FormData;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -33,6 +35,28 @@ class FormService
 
     public function getForm(int $formId): FormBuilder
     {
-        return FormBuilder::find($formId);
+        $form = FormBuilder::find($formId);
+
+        if (!$form) {
+            throw new ModelNotFoundException("FormBuilder with id $formId not found.");
+        }
+
+        return $form;
+    }
+
+    public function createFormData(array $data): FormData
+    {
+        return FormData::create($data);
+    }
+
+    public function getFormData(int $id): FormData
+    {
+        $formData = FormData::find($id);
+
+        if (!$formData) {
+            throw new ModelNotFoundException("FormData with id $id not found.");
+        }
+
+        return $formData;
     }
 }
