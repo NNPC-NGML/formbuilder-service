@@ -27,6 +27,10 @@ jobs:
           php artisan view:clear
           php artisan queue:restart
           composer dump-autoload
+    - name: Run Git Commands
+      run: |
+          git rm -r --cached .
+          git add .
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
 
