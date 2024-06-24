@@ -46,15 +46,20 @@ class FormService
 
     public function createFormData(array $data): FormData
     {
+
         $validator = Validator::make($data, [
             'form_builder_id' => 'required|exists:form_builders,id',
-            'form_field_answers' => 'required|json',
+            'form_field_answers' => 'required|array',
+            'form_field_answers.*.fieldId' => 'required|string',
+            'form_field_answers.*.fieldKey' => 'required|string',
+            'form_field_answers.*.response' => 'required|string',
+            'form_field_answers.*.question' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
-        
+
         return FormData::create($data);
     }
 

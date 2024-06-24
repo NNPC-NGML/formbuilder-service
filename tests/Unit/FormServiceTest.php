@@ -7,6 +7,7 @@ use App\Models\FormData;
 use App\Services\FormService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 
@@ -162,6 +163,78 @@ class FormServiceTest extends TestCase
         $this->formService->getForm($nonExistentId);
     }
 
+    public function testCreateFormDataValidation()
+    {
+        $formService = new FormService();
+
+        $form = FormBuilder::create([
+            'name' => 'Test Form Data',
+            'json_form' => '{"field1": "value1"}',
+            'field_structure' => [
+                [
+                    'fieldId' => 'field1',
+                    'name' => 'Field 1',
+                    'label' => 'Field One',
+                    'inputType' => 'text',
+                    'required' => true,
+                    'placeholder' => 'Enter Field 1'
+                ]
+            ],
+            'access_control' => [
+                ['user' => 1, 'role' => 'editor'],
+                ['user' => 2, 'role' => 'viewer']
+            ]
+        ]);
+
+        $validData = [
+            'form_builder_id' => $form->id,
+            'form_field_answers' => [
+                ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
+                ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => '30']
+            ],
+            'submitted' => true
+        ];
+
+        $formData = $formService->createFormData($validData);
+        $this->assertInstanceOf(FormData::class, $formData);
+    }
+
+    public function testCreateFormDataValidationFailure()
+    {
+        $formService = new FormService();
+
+        $form = FormBuilder::create([
+            'name' => 'Test Form Data',
+            'json_form' => '{"field1": "value1"}',
+            'field_structure' => [
+                [
+                    'fieldId' => 'field1',
+                    'name' => 'Field 1',
+                    'label' => 'Field One',
+                    'inputType' => 'text',
+                    'required' => true,
+                    'placeholder' => 'Enter Field 1'
+                ]
+            ],
+            'access_control' => [
+                ['user' => 1, 'role' => 'editor'],
+                ['user' => 2, 'role' => 'viewer']
+            ]
+        ]);
+
+        $invalidData = [
+            'form_builder_id' => $form->id,
+            'form_field_answers' => [
+                ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
+                ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => null] // Invalid response
+            ],
+            'submitted' => true
+        ];
+
+        $this->expectException(ValidationException::class);
+        $formService->createFormData($invalidData);
+    }
+
     public function testGetFormDataReturnsFormData()
     {
         $form = FormBuilder::create([
@@ -183,10 +256,14 @@ class FormServiceTest extends TestCase
             ]
         ]);
 
+        $fieldAnswers = [
+            ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
+            ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => '30']
+        ];
+
         $formDataData = [
             'form_builder_id' => $form->id,
-            'form_field_answers' => json_encode(['field1' => 'answer1'])
-        ];
+            'form_field_answers' => $fieldAnswers];
 
         $formDataCreated = FormData::create($formDataData);
 
@@ -194,9 +271,15 @@ class FormServiceTest extends TestCase
         $storedJson = $storedFormData->form_field_answers;
 
         $this->assertEquals(
-            json_encode(['field1' => 'answer1']),
+           $fieldAnswers,
             $storedJson,
             'The JSON stored in the database does not match the expected value.'
+        );
+
+        $this->assertEquals(
+            'What is your location?',
+            $storedJson[0]['question'],
+            'The question stored in the database does not match the expected value.'
         );
 
         $this->assertInstanceOf(FormData::class, $formDataCreated);
