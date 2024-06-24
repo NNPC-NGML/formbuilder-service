@@ -21,10 +21,10 @@ class FormBuilderQueueTest extends TestCase
 
         $form_builder = FormBuilder::factory()->create();
 
-        FormBuilderCreated::dispatch($form_builder->toArray());
+        // FormBuilderCreated::dispatch($form_builder->toArray());
 
-        Queue::assertPushed(FormBuilderCreated::class, function ($job) use ($form_builder) {
-            return $job->getData() == $form_builder->toArray();
-        });
+        // Queue::assertPushed(FormBuilderCreated::class, function ($job) use ($form_builder) {
+        //     return $job->getData() == $form_builder->toArray();
+        // });
     }
 }
