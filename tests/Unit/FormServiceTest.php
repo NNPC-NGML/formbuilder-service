@@ -226,7 +226,7 @@ class FormServiceTest extends TestCase
             'form_builder_id' => $form->id,
             'form_field_answers' => [
                 ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
-                ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => null] // Invalid response
+                ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => null]
             ],
             'submitted' => true
         ];
