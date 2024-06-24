@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Queue;
 
-use App\Job\Formbuilder\FormDataCreated;
+use App\Jobs\Formbuilder\FormDataCreated;
 use App\Services\FormService;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
