@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Jobs\Form\FormDataCreated;
 use App\Jobs\Automator\AutomatorTaskBroadcasterJob;
 use App\Jobs\Customer\CustomerTaskBroadcasterJob;
 use App\Jobs\ProcessFlow\ProcessFlowTaskBroadcasterJob;
@@ -27,6 +28,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \App::bindMethod(FormDataCreated::class . '@handle', fn($job) => $job->handle());
         \App::bindMethod(AutomatorTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
         \App::bindMethod(ProcessFlowTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
         \App::bindMethod(CustomerTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
