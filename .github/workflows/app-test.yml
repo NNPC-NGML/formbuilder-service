@@ -18,7 +18,7 @@ jobs:
     - name: Clear Composer Cache
       run: composer clear-cache
     - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: composer update -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Clear Caches
       run: |
           php artisan config:clear
