@@ -16,7 +16,7 @@ class CreateFormDataTable extends Migration
             $table->integer('process_flow_history_id');
             $table->string('entity');
             $table->integer('entity_id');
-            $table->integer('entity_site_id');
+            $table->integer('entity_site_id')->nullable();
             $table->integer('user_id');
             $table->boolean('status')->default(1);
             $table->timestamps();
