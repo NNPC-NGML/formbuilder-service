@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Formbuilder;
+namespace App\Jobs\FormBuilder;
 
 use App\Services\FormService;
 use Illuminate\Bus\Queueable;
