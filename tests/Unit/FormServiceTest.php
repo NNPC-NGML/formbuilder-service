@@ -88,14 +88,14 @@ class FormServiceTest extends TestCase
             'extra_field' => 'Unexpected Data'
         ]);
     }
+//      Start of uncommented section
+     //public function testGetFormById()
+     //{
 
-    // public function testGetFormById()
-    // {
-
-    //     $form_builder = FormBuilder::factory()->create();
+        // $form_builder = FormBuilder::factory()->create();
 
 
-    //     // $response = $this->get(route('forms.show', ['id' => $form_builder->id]));
+      //    $response = $this->get(route('forms.show', ['id' => $form_builder->id]));
 
     //     $response = $this->getJson('/api/forms/' . $form_builder->id);
 
@@ -119,7 +119,7 @@ class FormServiceTest extends TestCase
     public function testGetFormReturnsForm()
     {
         // Arrange
-        $form = FormBuilder::create([
+        $form = FormBuilder::factory()->create([
             'name' => 'Test Form',
             'json_form' => '{"field1": "value1"}',
             'field_structure' => [
@@ -167,7 +167,7 @@ class FormServiceTest extends TestCase
     {
         $formService = new FormService();
 
-        $form = FormBuilder::create([
+        $form = FormBuilder::factory()->create([
             'name' => 'Test Form Data',
             'json_form' => '{"field1": "value1"}',
             'field_structure' => [
@@ -192,7 +192,8 @@ class FormServiceTest extends TestCase
                 ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
                 ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => '30']
             ],
-            'submitted' => true
+            'submitted' => true,
+            'automator_task_id' => 1
         ];
 
         $formData = $formService->createFormData($validData);

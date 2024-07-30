@@ -22,6 +22,7 @@ Route::middleware('scope.user')->group(function () {
     });
     Route::get('/forms/{id}', [FormController::class, 'show'])->name('forms.show');
     Route::post('/forms', [FormController::class, 'create'])->name('forms.create');
+    Route::post('/form-data/{id}/data', [FormController::class, 'storeData'])->name('formdata.store');
 });
 
 

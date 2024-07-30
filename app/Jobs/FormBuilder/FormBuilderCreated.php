@@ -27,6 +27,8 @@ class FormBuilderCreated implements ShouldQueue
     public function handle(): void
     {
         //
+        $service = new FormService();
+        $service->createForm($this->data); 
     }
 
     public function getData(): array

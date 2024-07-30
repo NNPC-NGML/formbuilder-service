@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Formbuilder;
+namespace App\Jobs\FormBuilder;
 
 use App\Services\FormService;
 use Illuminate\Bus\Queueable;
@@ -38,8 +38,9 @@ class FormDataCreated implements ShouldQueue
      */
     public function handle(): void
     {
-         $service = new  FormService();
-         $service->createForm($this->data);
+         
+         $service = new FormService();
+         $service->createFormData($this->data);
 
     }
 
