@@ -14,6 +14,7 @@ class FormBuilder extends Model
         'access_control',
         'process_flow_id',
         'automator_flow_id',
+        'process_flow_step_id',
         'task_id'
     ];
 

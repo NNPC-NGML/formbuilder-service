@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Jobs\Formbuilder;
+namespace App\Jobs\FormBuilder;
 
+use App\Services\FormService;
+use App\Models\FormBuilder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
