@@ -180,7 +180,7 @@ class FormController extends Controller
         $form = $this->formService->getForm($id);
 
         if (!$form) {
-            return response()->json(['message' => 'Form not found'], 404);
+            return response()->json (['message' => 'Form not found'], 404);
         }
 
         return new FormResource($form);
