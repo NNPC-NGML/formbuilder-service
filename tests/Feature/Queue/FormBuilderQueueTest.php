@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Queue;
 
-use App\Jobs\Formbuilder\FormBuilderCreated;
+use App\Jobs\FormBuilder\FormBuilderCreated;
 use App\Models\FormBuilder;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
@@ -21,10 +21,13 @@ class FormBuilderQueueTest extends TestCase
 
         $form_builder = FormBuilder::factory()->create();
 
-        // FormBuilderCreated::dispatch($form_builder->toArray());
+        // Act: Dispatch the FormBuilderCreated Job
+        FormBuilderCreated::dispatch($form_builder->toArray());
 
-        // Queue::assertPushed(FormBuilderCreated::class, function ($job) use ($form_builder) {
-        //     return $job->getData() == $form_builder->toArray();
-        // });
+        // Assert: Ensure the FormBuilderCreated job was pushed to the queue
+        Queue::assertPushed(FormBuilderCreated::class, function ($job) use ($form_builder) {
+             return $job->getData() == $form_builder->toArray();
+         });
     }
+
 }

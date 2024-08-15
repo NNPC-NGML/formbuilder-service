@@ -180,9 +180,77 @@ class FormController extends Controller
         $form = $this->formService->getForm($id);
 
         if (!$form) {
-            return response()->json(['message' => 'Form not found'], 404);
+            return response()->json (['message' => 'Form not found'], 404);
         }
 
         return new FormResource($form);
     }
+
+
+    /**
+     * @OA\Post(
+     *     path="/forms/{id}/data",
+     *     tags={"Form Data"},
+     *     summary="Store form data",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the form to store data for",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"form_field_answers"},
+     *             @OA\Property(
+     *                 property="form_field_answers",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="fieldId",
+     *                         type="string",
+     *                         example="unique_field_id"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="fieldKey",
+     *                         type="string",
+     *                         example="key1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="response",
+     *                         type="string",
+     *                         example="answer1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="question",
+     *                         type="string",
+     *                         example="What is your username?"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Form data stored successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/FormData")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
+     */
+    public function storeData(Request $request, $id)
+    {
+        $data = $request->all();
+        $data['form_builder_id'] = $id;
+        $formData = $this->formService->createFormData($data);
+        FormDataCreated::dispatch($formData->toArray());
+        return response()->json($formData, 201);
+    }
 }
+

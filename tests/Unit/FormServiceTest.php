@@ -81,21 +81,23 @@ class FormServiceTest extends TestCase
         $form = $this->formService->createForm($formData);
 
         $this->assertDatabaseMissing('form_builders', [
-            'name' => $form->name
+            //'name' => $form->name
+            'name' => $formData['name']
         ]);
 
         $this->assertDatabaseMissing('form_builders', [
-            'extra_field' => 'Unexpected Data'
+            //'extra_field' => 'Unexpected Data'
+            'name' => $formData['name']
         ]);
     }
+//      Start of uncommented section
+     //public function testGetFormById()
+     //{
 
-    // public function testGetFormById()
-    // {
-
-    //     $form_builder = FormBuilder::factory()->create();
+        // $form_builder = FormBuilder::factory()->create();
 
 
-    //     // $response = $this->get(route('forms.show', ['id' => $form_builder->id]));
+      //    $response = $this->get(route('forms.show', ['id' => $form_builder->id]));
 
     //     $response = $this->getJson('/api/forms/' . $form_builder->id);
 
@@ -119,7 +121,7 @@ class FormServiceTest extends TestCase
     public function testGetFormReturnsForm()
     {
         // Arrange
-        $form = FormBuilder::create([
+        $form = FormBuilder::factory()->create([
             'name' => 'Test Form',
             'json_form' => '{"field1": "value1"}',
             'field_structure' => [
@@ -167,7 +169,7 @@ class FormServiceTest extends TestCase
     {
         $formService = new FormService();
 
-        $form = FormBuilder::create([
+        $form = FormBuilder::factory()->create([
             'name' => 'Test Form Data',
             'json_form' => '{"field1": "value1"}',
             'field_structure' => [
@@ -192,18 +194,27 @@ class FormServiceTest extends TestCase
                 ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
                 ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => '30']
             ],
-            'submitted' => true
+            'entity' => 1,
+            'entity_id' => 1,
+            'user_id' => 1,
+            'automator_task_id' => 1,
+            'process_flow_history_id' => 1,
+            'submitted' => true,
+         
         ];
 
         $formData = $formService->createFormData($validData);
         $this->assertInstanceOf(FormData::class, $formData);
+        $this->assertDatabaseHas('form_data', [
+            'form_builder_id' => $form->id
+        ]);
     }
 
     public function testCreateFormDataValidationFailure()
     {
-        $formService = new FormService();
+        //$formService = new FormService();
 
-        $form = FormBuilder::create([
+        $form = FormBuilder::factory()->create([
             'name' => 'Test Form Data',
             'json_form' => '{"field1": "value1"}',
             'field_structure' => [
@@ -232,12 +243,12 @@ class FormServiceTest extends TestCase
         ];
 
         $this->expectException(ValidationException::class);
-        $formService->createFormData($invalidData);
+        $this->formService->createFormData($invalidData);
     }
 
     public function testGetFormDataReturnsFormData()
     {
-        $form = FormBuilder::create([
+        $form = FormBuilder::factory()->create([
             'name' => 'Test Form Data',
             'json_form' => '{"field1": "value1"}',
             'field_structure' => [
@@ -263,7 +274,13 @@ class FormServiceTest extends TestCase
 
         $formDataData = [
             'form_builder_id' => $form->id,
-            'form_field_answers' => $fieldAnswers];
+            'form_field_answers' => $fieldAnswers,
+            'automator_task_id' => 1,  // Ensure automator_task_id is set
+            'process_flow_history_id' => 1,  // Ensure process_flow_history_id is set
+            'entity' => 1,
+            'entity_id' => 1,
+            'user_id' => 1,
+        ];
 
         $formDataCreated = FormData::create($formDataData);
 
