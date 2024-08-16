@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
     command: "php artisan queue:work"
     networks:
-      - automator_network
+      - formbuilder_network
 
   mysql:
     image: mariadb:10.5.8

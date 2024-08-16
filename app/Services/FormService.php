@@ -73,4 +73,15 @@ class FormService
 
         return $formData;
     }
+
+    /**
+     * Get all forms.
+     *
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|array A collection of all form objects.
+     */
+    public function getAllForms()
+    {
+        return  FormBuilder::all();
+    }
 }

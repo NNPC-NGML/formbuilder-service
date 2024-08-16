@@ -7,13 +7,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class FormResource extends JsonResource
 {
+
     /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
+     * @OA\Schema(
+     *     schema="FormResource",
+     *     @OA\Property(property="id", type="integer"),
+     *     @OA\Property(property="name", type="string"),
+     *     @OA\Property(property="json_form", type="string"),
+     *     @OA\Property(property="process_flow_id", type="integer")
+     * )
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "json_form" =>  $this->json_form,
+            "process_flow_id" => $this->process_flow_id,
+        ];
     }
 }
