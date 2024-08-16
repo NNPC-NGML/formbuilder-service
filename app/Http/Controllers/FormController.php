@@ -8,12 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Resources\FormResource;
 
-/**
- * @OA\Info(
- *     title="Formbuilder Service ",
- *     version="0.1"
- * )
- */
+
 class FormController extends Controller
 {
 
@@ -24,9 +19,45 @@ class FormController extends Controller
         $this->formService = $formService;
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/forms",
+     *     summary="Get all forms",
+     *     description="Retrieves a list of all available forms",
+     *     tags={"Forms"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/FormResource")   
+
+     *             ),
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="success"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+
+    public function index()
+    {
+        $allForms = $this->formService->getAllForms();
+        return FormResource::collection($allForms)->additional([
+            'status' => 'success' // or any other status you want to append
+        ]);
+    }
+
     /**
      * @OA\Post(
-     *     path="/forms",
+     *     path="/forms/create",
      *     tags={"Forms"},
      *     summary="Create a new form",
      *     @OA\RequestBody(
@@ -137,7 +168,7 @@ class FormController extends Controller
      *     @OA\Response(
      *         response=201,
      *         description="A newly created form",
-     *         @OA\JsonContent(ref="#/components/schemas/Form")
+     *         
      *     )
      * )
      */
@@ -150,7 +181,7 @@ class FormController extends Controller
     }
 
 
-      /**
+    /**
      * @OA\Get(
      *     path="/api/forms/{id}",
      *     tags={"Forms"},
@@ -167,7 +198,7 @@ class FormController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Form")
+     *         @OA\JsonContent(ref="#/components/schemas/FormResource")
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -175,7 +206,7 @@ class FormController extends Controller
      *     )
      * )
      */
-     public function show($id)
+    public function show($id)
     {
         $form = $this->formService->getForm($id);
 
@@ -236,7 +267,7 @@ class FormController extends Controller
      *     @OA\Response(
      *         response=201,
      *         description="Form data stored successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/FormData")
+     *         @OA\JsonContent(ref="#/components/schemas/FormResource")
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -253,4 +284,3 @@ class FormController extends Controller
         return response()->json($formData, 201);
     }
 }
-

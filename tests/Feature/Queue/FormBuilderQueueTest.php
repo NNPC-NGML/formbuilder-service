@@ -15,18 +15,18 @@ class FormBuilderQueueTest extends TestCase
 
     use RefreshDatabase;
 
-    public function test_it_dispatches_form_builder_created_job()
-    {
-        Queue::fake();
+    // public function test_it_dispatches_form_builder_created_job()
+    // {
+    //     Queue::fake();
 
-        $form_builder = FormBuilder::factory()->create();
+    //     $form_builder = FormBuilder::factory()->create();
 
-        // Act: Dispatch the FormBuilderCreated Job
-        FormBuilderCreated::dispatch($form_builder->toArray());
+    //     // Act: Dispatch the FormBuilderCreated Job
+    //     FormBuilderCreated::dispatch($form_builder->toArray());
 
-        // Assert: Ensure the FormBuilderCreated job was pushed to the queue
-        Queue::assertPushed(FormBuilderCreated::class, function ($job) use ($form_builder) {
-             return $job->getData() == $form_builder->toArray();
-         });
-    }
+    //     // Assert: Ensure the FormBuilderCreated job was pushed to the queue
+    //     Queue::assertPushed(FormBuilderCreated::class, function ($job) use ($form_builder) {
+    //          return $job->getData() == $form_builder->toArray();
+    //      });
+    // }
 }

@@ -1,0 +1,289 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Formbuilder Service ",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/forms": {
+            "get": {
+                "tags": [
+                    "Forms"
+                ],
+                "summary": "Get all forms",
+                "description": "Retrieves a list of all available forms",
+                "operationId": "f3b25f912126359aa20da08d3e875714",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/FormResource"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/forms/create": {
+            "post": {
+                "tags": [
+                    "Forms"
+                ],
+                "summary": "Create a new form",
+                "operationId": "f8d2ab5e85fedb6af1d25f952ba53471",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "json_form"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Annual Survey"
+                                    },
+                                    "json_form": {
+                                        "type": "string",
+                                        "example": "{'field1': 'value1', 'field2': 'value2'}"
+                                    },
+                                    "active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "field_structure": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "fieldId": {
+                                                    "type": "string",
+                                                    "example": "unique_field_id"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "username"
+                                                },
+                                                "label": {
+                                                    "type": "string",
+                                                    "example": "Username"
+                                                },
+                                                "inputType": {
+                                                    "type": "string",
+                                                    "example": "text"
+                                                },
+                                                "required": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "placeholder": {
+                                                    "type": "string",
+                                                    "example": "Enter your username"
+                                                },
+                                                "selectable": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "optionId": {
+                                                                "type": "string",
+                                                                "example": "option1"
+                                                            },
+                                                            "label": {
+                                                                "type": "string",
+                                                                "example": "Option 1"
+                                                            },
+                                                            "value": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "selected": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "range": {
+                                                    "properties": {
+                                                        "min": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "max": {
+                                                            "type": "integer",
+                                                            "example": 10
+                                                        },
+                                                        "step": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "A newly created form"
+                    }
+                }
+            }
+        },
+        "/api/forms/{id}": {
+            "get": {
+                "tags": [
+                    "Forms"
+                ],
+                "summary": "Retrieve a form by ID",
+                "description": "Returns a single form.",
+                "operationId": "getForm",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the form to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Form not found"
+                    }
+                }
+            }
+        },
+        "/forms/{id}/data": {
+            "post": {
+                "tags": [
+                    "Form Data"
+                ],
+                "summary": "Store form data",
+                "operationId": "19d1db948e5671071b4e4dd3305aa508",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the form to store data for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "form_field_answers"
+                                ],
+                                "properties": {
+                                    "form_field_answers": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "fieldId": {
+                                                    "type": "string",
+                                                    "example": "unique_field_id"
+                                                },
+                                                "fieldKey": {
+                                                    "type": "string",
+                                                    "example": "key1"
+                                                },
+                                                "response": {
+                                                    "type": "string",
+                                                    "example": "answer1"
+                                                },
+                                                "question": {
+                                                    "type": "string",
+                                                    "example": "What is your username?"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Form data stored successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "FormResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "json_form": {
+                        "type": "string"
+                    },
+                    "process_flow_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
