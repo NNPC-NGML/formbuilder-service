@@ -25,26 +25,11 @@ class FormBuilderFactory extends Factory
                 'field1' => $this->faker->word,
                 'field2' => $this->faker->word,
             ]),
-            'field_structure' => [
-                [
-                    'fieldId' => 'field1',
-                    'name' => $this->faker->word,
-                    'label' => $this->faker->sentence,
-                    'inputType' => $this->faker->randomElement(['text', 'number', 'email']),
-                    'required' => $this->faker->boolean,
-                    'placeholder' => $this->faker->sentence
-                ]
-            ],
-            'access_control' => [
-                [
-                    'user' => $this->faker->numberBetween(1, 100),
-                    'role' => $this->faker->randomElement(['viewer', 'editor']),
-                ],
-                [
-                    'user' => $this->faker->numberBetween(101, 200),
-                    'role' => $this->faker->randomElement(['viewer', 'editor']),
-                ]
-            ]
+            "process_flow_id" => $this->faker->numberBetween(0, 100),
+            "process_flow_step_id" => $this->faker->numberBetween(0, 100),
+            "tag_id" => $this->faker->numberBetween(0, 100),
+
+
         ];
     }
 }

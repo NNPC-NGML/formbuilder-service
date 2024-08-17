@@ -24,6 +24,8 @@ class FormResource extends JsonResource
             "name" => $this->name,
             "json_form" =>  $this->json_form,
             "process_flow_id" => $this->process_flow_id,
+            "process_flow_step_id" => $this->process_flow_step_id,
+            "tag_id" => $this->tag_id,
         ];
     }
 }
