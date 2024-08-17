@@ -18,7 +18,6 @@ class FormBuilderTest extends TestCase
         FormBuilder::factory(3)->create();
         $this->actingAsAuthenticatedTestUser();
         $response = $this->getJson('/api/forms/');
-        //dd($response);
         $this->assertEquals(3, count($response["data"]));
         $response->assertJsonStructure([
             "status",
@@ -33,5 +32,19 @@ class FormBuilderTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+    }
+
+    public function test_that_a_particular_forms_can_be_updated(): void
+    {
+        $form = FormBuilder::factory()->create();
+        $this->actingAsAuthenticatedTestUser();
+        $data = ["name" => "new updated name"];
+        $response = $this->putJson('/api/forms/update/' . $form->id, $data);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas("form_builders", $data);
+        $response->assertJsonStructure([
+            "status",
+            "message"
+        ]);
     }
 }

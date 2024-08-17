@@ -315,6 +315,26 @@ class FormServiceTest extends TestCase
         $this->assertDatabaseCount("form_builders", $allForms->count());
     }
 
+    public function test_that_a_particular_form_can_be_updated()
+    {
+        $service = $this->formService();
+
+        $form = FormBuilder::factory()->create();
+        $data = ["name" => "updated Name"];
+        $updatedForm = $service->updateForm($form->id, $data);
+        $this->assertTrue($updatedForm);
+        $this->assertDatabaseHas("form_builders", $data);
+    }
+
+    public function test_that_wrong_id_is_provided_to_update_form()
+    {
+        $service = $this->formService();
+        $data = ["name" => "updated Name"];
+        $updatedForm = $service->updateForm(0, $data);
+        $this->assertTrue(!$updatedForm);
+        $this->assertDatabaseMissing("form_builders", $data);
+    }
+
     private function formService()
     {
         return new FormService();
