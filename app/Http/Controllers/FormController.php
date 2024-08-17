@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\FormBuilder\FormBuilderCreated;
 use App\Services\FormService;
 use Illuminate\Http\Request;
 
+use App\Http\Resources\FormResource;
 
-/**
- * @OA\Info(
- *     title="Formbuilder Service ",
- *     version="0.1"
- * )
- */
+
 class FormController extends Controller
 {
 
@@ -22,9 +19,45 @@ class FormController extends Controller
         $this->formService = $formService;
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/forms",
+     *     summary="Get all forms",
+     *     description="Retrieves a list of all available forms",
+     *     tags={"Forms"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/FormResource")   
+
+     *             ),
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="success"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+
+    public function index()
+    {
+        $allForms = $this->formService->getAllForms();
+        return FormResource::collection($allForms)->additional([
+            'status' => 'success' // or any other status you want to append
+        ]);
+    }
+
     /**
      * @OA\Post(
-     *     path="/forms",
+     *     path="/forms/create",
      *     tags={"Forms"},
      *     summary="Create a new form",
      *     @OA\RequestBody(
@@ -135,7 +168,7 @@ class FormController extends Controller
      *     @OA\Response(
      *         response=201,
      *         description="A newly created form",
-     *         @OA\JsonContent(ref="#/components/schemas/Form")
+     *         
      *     )
      * )
      */
@@ -143,6 +176,233 @@ class FormController extends Controller
     public function create(Request $request)
     {
         $form = $this->formService->createForm($request->all());
+        FormBuilderCreated::dispatch($form->toArray());
         return response()->json($form, 201);
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/forms/{id}",
+     *     tags={"Forms"},
+     *     summary="Retrieve a form by ID",
+     *     description="Returns a single form.",
+     *     operationId="getForm",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the form to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/FormResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Form not found"
+     *     )
+     * )
+     */
+    public function show($id)
+    {
+        $form = $this->formService->getForm($id);
+
+        if (!$form) {
+            return response()->json(['message' => 'Form not found'], 404);
+        }
+
+        return new FormResource($form);
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/forms/{id}/data",
+     *     tags={"Form Data"},
+     *     summary="Store form data",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the form to store data for",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"form_field_answers"},
+     *             @OA\Property(
+     *                 property="form_field_answers",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="fieldId",
+     *                         type="string",
+     *                         example="unique_field_id"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="fieldKey",
+     *                         type="string",
+     *                         example="key1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="response",
+     *                         type="string",
+     *                         example="answer1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="question",
+     *                         type="string",
+     *                         example="What is your username?"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Form data stored successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/FormResource")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
+     */
+    public function storeData(Request $request, $id)
+    {
+        $data = $request->all();
+        $data['form_builder_id'] = $id;
+        $formData = $this->formService->createFormData($data);
+        FormDataCreated::dispatch($formData->toArray());
+        return response()->json($formData, 201);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/forms/update/{id}",
+     *     tags={"Forms"},
+     *     summary="Update a form",
+     *     description="Updates the form with the specified ID.",
+     *     operationId="updateForm",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the form to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="name",
+     *                 type="string",
+     *                 example="value1"
+     *             ),
+     *             @OA\Property(
+     *                 property="tag_id",
+     *                 type="string",
+     *                 example="value1"
+     *             ),
+     *             @OA\Property(
+     *                 property="json_form",
+     *                 type="object",
+     *                 example={"name": "value"}
+     *             ),
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="process_flow_id",
+     *                 type="integer",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="process_flow_step_id",
+     *                 type="integer",
+     *                 example=1
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Form updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="success"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Form updated successfully"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="error"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Invalid ID"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Form not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="error"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Form not found"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+
+    public function update(int $id, Request $request)
+    {
+        if (empty($id) || $id < 1) {
+            return false;
+        }
+        $update = $this->formService->updateForm($id, $request->all());
+        if ($update) {
+            return response()->json([
+                "status" => "success",
+                "message" => "form updated successfully"
+            ], 200);
+        }
+
+        return response()->json([
+            "status" => "error",
+            "message" => "Invalid ID"
+        ], 400);
     }
 }
