@@ -12,8 +12,8 @@ class CreateFormDataTable extends Migration
             $table->id();
             $table->foreignId('form_builder_id')->nullable()->constrained()->onDelete('cascade');
             $table->json('form_field_answers')->nullable();
-            $table->integer('automator_task_id');
-            $table->integer('process_flow_history_id');
+            $table->integer('automator_task_id')->nullable();
+            $table->integer('process_flow_history_id')->nullable();
             $table->string('entity');
             $table->integer('entity_id');
             $table->integer('entity_site_id')->nullable();

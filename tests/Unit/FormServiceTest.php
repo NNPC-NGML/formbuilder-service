@@ -335,6 +335,22 @@ class FormServiceTest extends TestCase
         $this->assertDatabaseMissing("form_builders", $data);
     }
 
+    public function test_that_a_single_form_can_be_fetched()
+    {
+        FormBuilder::factory(3)->create();
+        $service = $this->formService()->getForm(1);
+        $this->assertInstanceOf(FormBuilder::class, $service);
+    }
+
+    public function test_that_a_single_form_can_be_fetched_it_most_recent_active_relation()
+    {
+        $form = FormBuilder::factory(3)->create();
+        // create new data
+        FormData::factory()->create(["form_builder_id" => $form[0]->id]);
+        $service = $this->formService()->getFormWithRelationships($form[0]->id);
+        $this->assertInstanceOf(FormData::class, $service->activeFormdata[0]);
+    }
+
     private function formService()
     {
         return new FormService();
