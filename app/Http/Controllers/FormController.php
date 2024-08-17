@@ -283,4 +283,126 @@ class FormController extends Controller
         FormDataCreated::dispatch($formData->toArray());
         return response()->json($formData, 201);
     }
+
+    /**
+     * @OA\Put(
+     *     path="/forms/update/{id}",
+     *     tags={"Forms"},
+     *     summary="Update a form",
+     *     description="Updates the form with the specified ID.",
+     *     operationId="updateForm",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the form to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="name",
+     *                 type="string",
+     *                 example="value1"
+     *             ),
+     *             @OA\Property(
+     *                 property="tag_id",
+     *                 type="string",
+     *                 example="value1"
+     *             ),
+     *             @OA\Property(
+     *                 property="json_form",
+     *                 type="object",
+     *                 example={"name": "value"}
+     *             ),
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="process_flow_id",
+     *                 type="integer",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="process_flow_step_id",
+     *                 type="integer",
+     *                 example=1
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Form updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="success"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Form updated successfully"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="error"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Invalid ID"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Form not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 example="error"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Form not found"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+
+    public function update(int $id, Request $request)
+    {
+        if (empty($id) || $id < 1) {
+            return false;
+        }
+        $update = $this->formService->updateForm($id, $request->all());
+        if ($update) {
+            return response()->json([
+                "status" => "success",
+                "message" => "form updated successfully"
+            ], 200);
+        }
+
+        return response()->json([
+            "status" => "error",
+            "message" => "Invalid ID"
+        ], 400);
+    }
 }

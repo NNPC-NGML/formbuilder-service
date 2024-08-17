@@ -84,4 +84,21 @@ class FormService
     {
         return  FormBuilder::all();
     }
+    /**
+     * Get all forms.
+     *
+     *
+     * @return boolean indicating update was a success.
+     */
+    public function updateForm(int $id, array $data)
+    {
+        try {
+            $form = $this->getForm($id);
+            if ($form) {
+                return  $form->update($data);
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
