@@ -407,13 +407,78 @@ class FormController extends Controller
         ], 400);
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/form/view/{id}/{entity}/{entity_id}",
+     *     summary="View a specific form with relationships",
+     *     description="This endpoint allows a user to view a specific form with its relationships. 
+     *                  It checks the access permissions based on the entity and entity_id parameters.",
+     *     operationId="viewForm",
+     *     tags={"Forms"},
+     *     
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the form to view",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="entity",
+     *         in="path",
+     *         description="Entity type associated with the form",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="entity_id",
+     *         in="path",
+     *         description="Entity ID associated with the form",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     
+     *     @OA\Response(
+     *         response=200,
+     *         description="Form retrieved successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/FormResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Access denied to this form",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="you do not have access to this form")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Entity ID mismatch with active user",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="The entity id does not match with the active user")
+     *         )
+     *     ),
+     *     
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function view(int $id, string $entity, int $entity_id)
     {
 
         $user = auth()->id();
         if ($entity_id > 0 && $entity_id !== $user) {
             return response()->json([
-                "status" => "error",s
+                "status" => "error",
                 "message" => "The entity id does not match with the active  user",
             ], 500);
         }
