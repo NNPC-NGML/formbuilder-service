@@ -10,14 +10,17 @@ class FormData extends Model
     use HasFactory;
 
     protected $fillable = [
-        'form_builder_id', 'form_field_answers', 'automator_task_id',
-        'process_flow_history_id', 'entity', 'entity_id', 
-        'entity_site_id', 'user_id', 'status'
+        'form_builder_id',
+        'form_field_answers',
+        'automator_task_id',
+        'process_flow_history_id',
+        'entity',
+        'entity_id',
+        'entity_site_id',
+        'user_id', 'status'
     ];
 
-    protected $casts = [
-        'form_field_answers' => 'array'
-    ];
+    protected $casts = [];
 
     public function formBuilder()
     {

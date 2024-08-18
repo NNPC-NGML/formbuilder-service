@@ -2,10 +2,11 @@
 
 namespace Tests\Feature\FormBuilder;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\FormData;
 use App\Models\FormBuilder;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class FormBuilderTest extends TestCase
 {
@@ -45,6 +46,25 @@ class FormBuilderTest extends TestCase
         $response->assertJsonStructure([
             "status",
             "message"
+        ]);
+    }
+
+    public function test_that_a_particular_forms_can_be_viewed(): void
+    {
+        $form = FormBuilder::factory()->create();
+        FormData::factory()->create(["form_builder_id" => $form->id]);
+        $this->actingAsAuthenticatedTestUser();
+        $response = $this->getJson('/api/forms/view/' . $form->id . "/user/1");
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            "status",
+            "data" => [
+                "id",
+                "name",
+                "json_form",
+                "process_flow_id",
+                "form_data"
+            ]
         ]);
     }
 }

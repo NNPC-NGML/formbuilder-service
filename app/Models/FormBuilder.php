@@ -22,4 +22,9 @@ class FormBuilder extends Model
     {
         return $this->hasMany(FormData::class, 'form_builder_id');
     }
+
+    public function activeFormdata()
+    {
+        return $this->hasMany(FormData::class, 'form_builder_id')->where(["status" => 0]);
+    }
 }

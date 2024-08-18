@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\FormBuilder\FormBuilderCreated;
-use App\Services\FormService;
+use Skillz\UserService;
 use Illuminate\Http\Request;
+use App\Services\FormService;
 
 use App\Http\Resources\FormResource;
-
+use App\Jobs\FormBuilder\FormBuilderCreated;
+use Illuminate\Support\Facades\Auth;
 
 class FormController extends Controller
 {
@@ -404,5 +405,118 @@ class FormController extends Controller
             "status" => "error",
             "message" => "Invalid ID"
         ], 400);
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/form/view/{id}/{entity}/{entity_id}",
+     *     summary="View a specific form with relationships",
+     *     description="This endpoint allows a user to view a specific form with its relationships. 
+     *                  It checks the access permissions based on the entity and entity_id parameters.",
+     *     operationId="viewForm",
+     *     tags={"Forms"},
+     *     
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the form to view",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="entity",
+     *         in="path",
+     *         description="Entity type associated with the form",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="entity_id",
+     *         in="path",
+     *         description="Entity ID associated with the form",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     
+     *     @OA\Response(
+     *         response=200,
+     *         description="Form retrieved successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/FormResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Access denied to this form",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="you do not have access to this form")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Entity ID mismatch with active user",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="The entity id does not match with the active user")
+     *         )
+     *     ),
+     *     
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
+    public function view(int $id, string $entity, int $entity_id)
+    {
+
+        $user = auth()->id();
+        if ($entity_id > 0 && $entity_id !== $user) {
+            return response()->json([
+                "status" => "error",
+                "message" => "The entity id does not match with the active  user",
+            ], 500);
+        }
+        $getForm = $this->formService->getFormWithRelationships($id);
+        $response = (new FormResource($getForm))->additional([
+            'status' => 'success' // or any other status you want to append
+        ]);
+
+        if ($getForm) {
+            // check if the form has a process_flow_id
+            if (empty($getForm->process_flow_id)) {
+                // check that there is an active form data 
+                if ($getForm->activeFormdata->count() > 0) {
+                    // check if data relationship entity and entity id exist in data before granting user access to form
+                    //use array filter to do the check
+                    $checkAccess = array_filter($getForm->activeFormdata->toArray(), function ($formData) use ($entity, $entity_id) {
+                        return isset($formData['entity'])
+                            && isset($formData['entity_id'])
+                            && $formData['entity'] === $entity
+                            && $formData['entity_id'] == $entity_id;
+                    });
+                    $checkAccess = array_filter($getForm->activeFormdata->toArray());
+                    if (!empty($checkAccess)) {
+                        return $response;
+                    }
+                    return response()->json([
+                        "status" => "error",
+                        "message" => "you do not have access to this form",
+                    ], 400);
+                } else {
+                    return response()->json([
+                        "status" => "error",
+                        "message" => "you do not have access to this form",
+                    ], 400);
+                }
+            }
+
+            return $response;
+        }
     }
 }
