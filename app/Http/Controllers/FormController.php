@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\FormBuilder\FormBuilderCreated;
-use App\Services\FormService;
+use Skillz\UserService;
 use Illuminate\Http\Request;
+use App\Services\FormService;
 
 use App\Http\Resources\FormResource;
-
+use App\Jobs\FormBuilder\FormBuilderCreated;
+use Illuminate\Support\Facades\Auth;
 
 class FormController extends Controller
 {
@@ -404,5 +405,53 @@ class FormController extends Controller
             "status" => "error",
             "message" => "Invalid ID"
         ], 400);
+    }
+
+    public function view(int $id, string $entity, int $entity_id)
+    {
+
+        $user = auth()->id();
+        if ($entity_id > 0 && $entity_id !== $user) {
+            return response()->json([
+                "status" => "error",s
+                "message" => "The entity id does not match with the active  user",
+            ], 500);
+        }
+        $getForm = $this->formService->getFormWithRelationships($id);
+        $response = (new FormResource($getForm))->additional([
+            'status' => 'success' // or any other status you want to append
+        ]);
+
+        if ($getForm) {
+            // check if the form has a process_flow_id
+            if (empty($getForm->process_flow_id)) {
+                // check that there is an active form data 
+                if ($getForm->activeFormdata->count() > 0) {
+                    // check if data relationship entity and entity id exist in data before granting user access to form
+                    //use array filter to do the check
+                    $checkAccess = array_filter($getForm->activeFormdata->toArray(), function ($formData) use ($entity, $entity_id) {
+                        return isset($formData['entity'])
+                            && isset($formData['entity_id'])
+                            && $formData['entity'] === $entity
+                            && $formData['entity_id'] == $entity_id;
+                    });
+                    $checkAccess = array_filter($getForm->activeFormdata->toArray());
+                    if (!empty($checkAccess)) {
+                        return $response;
+                    }
+                    return response()->json([
+                        "status" => "error",
+                        "message" => "you do not have access to this form",
+                    ], 400);
+                } else {
+                    return response()->json([
+                        "status" => "error",
+                        "message" => "you do not have access to this form",
+                    ], 400);
+                }
+            }
+
+            return $response;
+        }
     }
 }
