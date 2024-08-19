@@ -43,6 +43,7 @@ class FormService
 
         return $form;
     }
+
     public function getFormWithRelationships(int $formId): FormBuilder
     {
         $form = FormBuilder::where(["id" => $formId])->with(["activeFormdata"])->first();
@@ -54,16 +55,19 @@ class FormService
         return $form;
     }
 
+    /**
+     * Create form data.
+     * 
+     * @param array $data form data you want to update
+     *
+     * @return App\Models\FormData an instance of the created form data.
+     */
     public function createFormData(array $data): FormData
     {
 
         $validator = Validator::make($data, [
             'form_builder_id' => 'required|exists:form_builders,id',
-            'form_field_answers' => 'required|array',
-            'form_field_answers.*.fieldId' => 'required|string',
-            'form_field_answers.*.fieldKey' => 'required|string',
-            'form_field_answers.*.response' => 'required|string',
-            'form_field_answers.*.question' => 'required|string',
+            'form_field_answers' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -94,9 +98,12 @@ class FormService
     {
         return  FormBuilder::all();
     }
+
     /**
-     * Get all forms.
-     *
+     * Update a  form details.
+     * 
+     * @param integer $id form id
+     * @param array $data form data you want to update
      *
      * @return boolean indicating update was a success.
      */
@@ -106,6 +113,26 @@ class FormService
             $form = $this->getForm($id);
             if ($form) {
                 return  $form->update($data);
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Update Form Data.
+     * 
+     * @param integer $id the form data id to be updated
+     * @param array $data the the new data to use to update the form data
+     *
+     * @return boolean indicating update was a success.
+     */
+    public function updateFormData(int $id, array $data)
+    {
+        try {
+            $formData = $this->getFormData($id);
+            if ($formData) {
+                return  $formData->update($data);
             }
         } catch (\Exception $e) {
             return false;

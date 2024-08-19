@@ -17,7 +17,8 @@ class FormData extends Model
         'entity',
         'entity_id',
         'entity_site_id',
-        'user_id', 'status'
+        'user_id',
+        'status'
     ];
 
     protected $casts = [];
