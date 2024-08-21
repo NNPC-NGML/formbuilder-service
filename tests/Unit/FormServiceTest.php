@@ -351,6 +351,65 @@ class FormServiceTest extends TestCase
         $this->assertInstanceOf(FormData::class, $service->activeFormdata[0]);
     }
 
+    public function test_that_form_data_can_be_created()
+    {
+        $form = FormBuilder::factory()->create();
+        $service = $this->formService();
+        $data = [
+            'form_builder_id' => $form->id,
+            'form_field_answers' => json_encode([
+                ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
+                ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => '30']
+            ]),
+            'automator_task_id' => 1,
+            'process_flow_history_id' => 1,
+            'entity' => "user",
+            'entity_id' => 1,
+            'entity_site_id' => 1,
+            'user_id' => 1,
+            'status' => 1,
+        ];
+        $formData = $service->createFormData($data);
+
+        $this->assertDatabaseHas("form_data", $data);
+        $this->assertInstanceOf(FormData::class, $formData);
+    }
+
+    public function test_that_form_data_can_be_updated()
+    {
+        $form = FormBuilder::factory()->create();
+        $service = $this->formService();
+        $data = [
+            'form_builder_id' => $form->id,
+            'form_field_answers' => json_encode([
+                ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'What is your location?', 'response' => 'India'],
+                ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => '30']
+            ]),
+            'automator_task_id' => 1,
+            'process_flow_history_id' => 1,
+            'entity' => "user",
+            'entity_id' => 1,
+            'entity_site_id' => 1,
+            'user_id' => 1,
+            'status' => 1,
+        ];
+        $formData = $service->createFormData($data);
+        $newData = [
+            'form_builder_id' => $form->id,
+            'form_field_answers' => json_encode([
+                ['fieldId' => '1', 'fieldKey' => 'text', 'question' => 'this is the new change?', 'response' => 'India'],
+                ['fieldId' => '2', 'fieldKey' => 'text', 'question' => 'What is your age?', 'response' => '30']
+            ]),
+
+
+        ];
+
+        $updatedFormData = $service->updateFormData($formData->id, $newData);
+        $this->assertTrue($updatedFormData);
+        $this->assertDatabaseHas("form_data", $newData);
+        $this->assertDatabaseMissing("form_data", $data);
+    }
+
     private function formService()
     {
         return new FormService();

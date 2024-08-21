@@ -1,10 +1,10 @@
-name: Laravel
+name: automator-test
 
 on:
   push:
 
 jobs:
-  laravel-tests:
+  form-builder-tests:
 
     runs-on: ubuntu-latest
 
@@ -15,23 +15,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Clear Composer Cache
-      run: composer clear-cache
     - name: Install Dependencies
-      run: composer update -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Clear Caches
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Run tests
       run: |
-          php artisan config:clear
-          php artisan cache:clear
-          php artisan route:clear
-          php artisan view:clear
-          php artisan queue:restart
-          composer dump-autoload
-    - name: Run Git Commands
-      run: |
-          git rm -r --cached .
-          git add .
-
-    - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
-
-      run: php artisan test
+        CI=false php artisan test
+        echo "Exit code: $?"

@@ -448,6 +448,18 @@ class FormController extends Controller
      *             @OA\Property(property="data", type="object", ref="#/components/schemas/FormResource")
      *         )
      *     ),
+     * 
+     *     @OA\Response(
+     *         response=200,
+     *         description="Form retrieved successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="task", type="object", example="success"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/FormResource")
+     *         )
+     *     ),
+     * 
      *     @OA\Response(
      *         response=400,
      *         description="Access denied to this form",
@@ -476,33 +488,36 @@ class FormController extends Controller
     {
 
         $user = auth()->id();
-        if ($entity_id > 0 && $entity_id !== $user) {
-            return response()->json([
-                "status" => "error",
-                "message" => "The entity id does not match with the active  user",
-            ], 500);
-        }
+        // if ($entity_id > 0 && $entity_id !== $user) {
+        //     return response()->json([
+        //         "status" => "error",
+        //         "message" => "The entity id does not match with the active  user",
+        //     ], 500);
+        // }
         $getForm = $this->formService->getFormWithRelationships($id);
-        $response = (new FormResource($getForm))->additional([
-            'status' => 'success' // or any other status you want to append
-        ]);
+        $response = (new FormResource($getForm));
 
         if ($getForm) {
+
             // check if the form has a process_flow_id
-            if (empty($getForm->process_flow_id)) {
+
+            if ($getForm->process_flow_id < 1) {
                 // check that there is an active form data 
                 if ($getForm->activeFormdata->count() > 0) {
                     // check if data relationship entity and entity id exist in data before granting user access to form
                     //use array filter to do the check
-                    $checkAccess = array_filter($getForm->activeFormdata->toArray(), function ($formData) use ($entity, $entity_id) {
+                    $checkAccess = array_filter($getForm->activeFormdata->toArray(), function ($formData) use ($entity, $entity_id, $user) {
                         return isset($formData['entity'])
                             && isset($formData['entity_id'])
                             && $formData['entity'] === $entity
-                            && $formData['entity_id'] == $entity_id;
+                            && $formData['entity_id'] == $entity_id
+                            && $formData['user_id'] == $user;
                     });
-                    $checkAccess = array_filter($getForm->activeFormdata->toArray());
                     if (!empty($checkAccess)) {
-                        return $response;
+                        return $response->additional([
+                            'status' => 'success', // or any other status you want to append
+                            'task' => $checkAccess[0] // return the specific task
+                        ]);
                     }
                     return response()->json([
                         "status" => "error",
@@ -516,7 +531,9 @@ class FormController extends Controller
                 }
             }
 
-            return $response;
+            return $response->additional([
+                'status' => 'success' // or any other status you want to append
+            ]);
         }
     }
 }
