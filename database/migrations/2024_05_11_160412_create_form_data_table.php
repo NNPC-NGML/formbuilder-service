@@ -14,8 +14,8 @@ class CreateFormDataTable extends Migration
             $table->json('form_field_answers')->nullable();
             $table->integer('automator_task_id')->nullable();
             $table->integer('process_flow_history_id')->nullable();
-            $table->string('entity');
-            $table->integer('entity_id');
+            $table->string('entity')->nullable();
+            $table->integer('entity_id')->nullable();
             $table->integer('entity_site_id')->nullable();
             $table->integer('user_id');
             $table->boolean('status')->default(1);

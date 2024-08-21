@@ -49,12 +49,12 @@ class FormBuilderTest extends TestCase
         ]);
     }
 
-    public function test_that_a_particular_forms_can_be_viewed(): void
+    public function test_that_a_particular_forms_with_process_flow_id_can_be_viewed(): void
     {
         $form = FormBuilder::factory()->create();
         FormData::factory()->create(["form_builder_id" => $form->id]);
         $this->actingAsAuthenticatedTestUser();
-        $response = $this->getJson('/api/forms/view/' . $form->id . "/user/1");
+        $response = $this->getJson('/api/forms/view/' . $form->id . "/customer/1");
         $response->assertStatus(200);
         $response->assertJsonStructure([
             "status",
@@ -63,7 +63,29 @@ class FormBuilderTest extends TestCase
                 "name",
                 "json_form",
                 "process_flow_id",
-                "form_data"
+                "form_data",
+
+            ]
+        ]);
+    }
+
+    public function test_that_a_particular_forms_without_process_flow_id_can_be_viewed(): void
+    {
+        $form = FormBuilder::factory()->create(["process_flow_id" => 0]);
+        FormData::factory()->create(["form_builder_id" => $form->id, "entity" => "customer", "entity_id" => 1, "user_id" => 1]);
+        $this->actingAsAuthenticatedTestUser();
+        $response = $this->getJson('/api/forms/view/' . $form->id . "/customer/1");
+        dd($response);
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            "status",
+            "data" => [
+                "id",
+                "name",
+                "json_form",
+                "process_flow_id",
+                "form_data",
+
             ]
         ]);
     }
