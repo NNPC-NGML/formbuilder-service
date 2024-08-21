@@ -85,7 +85,6 @@ class FormBuilderTest extends TestCase
                 "json_form",
                 "process_flow_id",
                 "form_data",
-
             ]
         ]);
     }
