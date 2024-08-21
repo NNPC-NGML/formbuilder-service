@@ -75,7 +75,6 @@ class FormBuilderTest extends TestCase
         FormData::factory()->create(["form_builder_id" => $form->id, "entity" => "customer", "entity_id" => 1, "user_id" => 1]);
         $this->actingAsAuthenticatedTestUser();
         $response = $this->getJson('/api/forms/view/' . $form->id . "/customer/1");
-        dd($response);
         $response->assertStatus(200);
         $response->assertJsonStructure([
             "status",
