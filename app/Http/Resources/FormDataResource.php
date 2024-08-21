@@ -10,7 +10,7 @@ class FormDataResource extends JsonResource
 
     /**
      * @OA\Schema(
-     *     schema="FormResource",
+     *     schema="FormDataResource",
      *     @OA\Property(property="id", type="integer"),
      *     @OA\Property(property="name", type="string"),
      *     @OA\Property(property="json_form", type="string"),

@@ -39,122 +39,145 @@
                 }
             }
         },
-        "/forms/create": {
+        "api/forms/create": {
             "post": {
                 "tags": [
                     "Forms"
                 ],
                 "summary": "Create a new form",
-                "operationId": "f8d2ab5e85fedb6af1d25f952ba53471",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "name",
-                                    "json_form"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Annual Survey"
-                                    },
-                                    "json_form": {
-                                        "type": "string",
-                                        "example": "{'field1': 'value1', 'field2': 'value2'}"
-                                    },
-                                    "active": {
-                                        "type": "boolean",
-                                        "example": true
-                                    },
-                                    "field_structure": {
-                                        "type": "array",
-                                        "items": {
-                                            "properties": {
-                                                "fieldId": {
-                                                    "type": "string",
-                                                    "example": "unique_field_id"
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "username"
-                                                },
-                                                "label": {
-                                                    "type": "string",
-                                                    "example": "Username"
-                                                },
-                                                "inputType": {
-                                                    "type": "string",
-                                                    "example": "text"
-                                                },
-                                                "required": {
-                                                    "type": "boolean",
-                                                    "example": true
-                                                },
-                                                "placeholder": {
-                                                    "type": "string",
-                                                    "example": "Enter your username"
-                                                },
-                                                "selectable": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "optionId": {
-                                                                "type": "string",
-                                                                "example": "option1"
-                                                            },
-                                                            "label": {
-                                                                "type": "string",
-                                                                "example": "Option 1"
-                                                            },
-                                                            "value": {
-                                                                "type": "string",
-                                                                "example": "1"
-                                                            },
-                                                            "selected": {
-                                                                "type": "boolean",
-                                                                "example": false
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "range": {
-                                                    "properties": {
-                                                        "min": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "max": {
-                                                            "type": "integer",
-                                                            "example": 10
-                                                        },
-                                                        "step": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "description": "Create a new form builder",
+                "operationId": "1d5bcbdf5c69877ab432b408173b3c82",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of the form builder",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "json_form",
+                        "in": "query",
+                        "description": "JSON representation of the form",
+                        "required": true,
+                        "schema": {
+                            "type": "json"
+                        }
+                    },
+                    {
+                        "name": "process_flow_id",
+                        "in": "query",
+                        "description": "Process flow ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "process_flow_step_id",
+                        "in": "query",
+                        "description": "Process flow step ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "tag_id",
+                        "in": "query",
+                        "description": "Tag ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Status of the form builder",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "201": {
-                        "description": "A newly created form"
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the created form builder",
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "description": "Name of the form builder",
+                                            "type": "string"
+                                        },
+                                        "json_form": {
+                                            "description": "JSON representation of the form",
+                                            "type": "string"
+                                        },
+                                        "process_flow_id": {
+                                            "description": "Process flow ID",
+                                            "type": "integer"
+                                        },
+                                        "process_flow_step_id": {
+                                            "description": "Process flow step ID",
+                                            "type": "integer"
+                                        },
+                                        "tag_id": {
+                                            "description": "Tag ID",
+                                            "type": "integer"
+                                        },
+                                        "status": {
+                                            "description": "Status of the form builder",
+                                            "type": "boolean"
+                                        },
+                                        "created_at": {
+                                            "description": "Timestamp of when the form builder was created",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Timestamp of when the form builder was last updated",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "description": "Validation errors",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/api/forms/{id}": {
+        "api/forms/{id}": {
             "get": {
                 "tags": [
                     "Forms"
@@ -190,81 +213,7 @@
                 }
             }
         },
-        "/forms/{id}/data": {
-            "post": {
-                "tags": [
-                    "Form Data"
-                ],
-                "summary": "Store form data",
-                "operationId": "19d1db948e5671071b4e4dd3305aa508",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the form to store data for",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "form_field_answers"
-                                ],
-                                "properties": {
-                                    "form_field_answers": {
-                                        "type": "array",
-                                        "items": {
-                                            "properties": {
-                                                "fieldId": {
-                                                    "type": "string",
-                                                    "example": "unique_field_id"
-                                                },
-                                                "fieldKey": {
-                                                    "type": "string",
-                                                    "example": "key1"
-                                                },
-                                                "response": {
-                                                    "type": "string",
-                                                    "example": "answer1"
-                                                },
-                                                "question": {
-                                                    "type": "string",
-                                                    "example": "What is your username?"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Form data stored successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/FormResource"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error"
-                    }
-                }
-            }
-        },
-        "/forms/update/{id}": {
+        "api/forms/update/{id}": {
             "put": {
                 "tags": [
                     "Forms"
@@ -385,13 +334,13 @@
                 }
             }
         },
-        "/form/view/{id}/{entity}/{entity_id}": {
+        "api/forms/view/{id}/{entity}/{entity_id}": {
             "get": {
                 "tags": [
                     "Forms"
                 ],
                 "summary": "View a specific form with relationships",
-                "description": "This endpoint allows a user to view a specific form with its relationships. \n     *                  It checks the access permissions based on the entity and entity_id parameters.",
+                "description": "This endpoint allows a user to view a specific form with its relationships.\n     *                  It checks the access permissions based on the entity and entity_id parameters.",
                 "operationId": "viewForm",
                 "parameters": [
                     {
@@ -431,6 +380,10 @@
                                     "properties": {
                                         "status": {
                                             "type": "string",
+                                            "example": "success"
+                                        },
+                                        "task": {
+                                            "type": "object",
                                             "example": "success"
                                         },
                                         "data": {
@@ -493,6 +446,23 @@
     },
     "components": {
         "schemas": {
+            "FormDataResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "json_form": {
+                        "type": "string"
+                    },
+                    "process_flow_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "FormResource": {
                 "properties": {
                     "id": {
