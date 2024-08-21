@@ -15,16 +15,7 @@ class FormService
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
             'json_form' => 'required|json',
-            'field_structure' => 'required|array',
-            'field_structure.*.fieldId' => 'required|string',
-            'field_structure.*.name' => 'required|string',
-            'field_structure.*.label' => 'required|string',
-            'field_structure.*.inputType' => 'required|string',
-            'field_structure.*.required' => 'required|boolean',
-            'field_structure.*.placeholder' => 'nullable|string',
-            'access_control' => 'sometimes|array',
-            'access_control.*.user' => 'sometimes|integer',
-            'access_control.*.role' => 'sometimes|string',
+            'tag_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {

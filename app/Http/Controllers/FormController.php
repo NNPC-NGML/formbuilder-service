@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Skillz\UserService;
-use Illuminate\Http\Request;
-use App\Services\FormService;
-
 use App\Http\Resources\FormResource;
 use App\Jobs\FormBuilder\FormBuilderCreated;
+use App\Services\FormService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FormController extends Controller
@@ -19,7 +17,6 @@ class FormController extends Controller
     {
         $this->formService = $formService;
     }
-
 
     /**
      * @OA\Get(
@@ -35,7 +32,7 @@ class FormController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/FormResource")   
+     *                 @OA\Items(ref="#/components/schemas/FormResource")
 
      *             ),
      *             @OA\Property(
@@ -52,128 +49,134 @@ class FormController extends Controller
     {
         $allForms = $this->formService->getAllForms();
         return FormResource::collection($allForms)->additional([
-            'status' => 'success' // or any other status you want to append
+            'status' => 'success', // or any other status you want to append
         ]);
     }
 
     /**
+     * Create a new form builder
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     *
      * @OA\Post(
-     *     path="/forms/create",
-     *     tags={"Forms"},
+     *     path="api/forms/create",
      *     summary="Create a new form",
-     *     @OA\RequestBody(
+     *     description="Create a new form builder",
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Name of the form builder",
      *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="json_form",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="json"),
+     *         description="JSON representation of the form"
+     *     ),
+     *     @OA\Parameter(
+     *         name="process_flow_id",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(type="integer"),
+     *         description="Process flow ID"
+     *     ),
+     *     @OA\Parameter(
+     *         name="process_flow_step_id",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(type="integer"),
+     *         description="Process flow step ID"
+     *     ),
+     *     @OA\Parameter(
+     *         name="tag_id",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="Tag ID"
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(type="boolean"),
+     *         description="Status of the form builder"
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Created",
      *         @OA\JsonContent(
-     *             type="object",
-     *             required={"name", "json_form"},
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 description="ID of the created form builder"
+     *             ),
      *             @OA\Property(
      *                 property="name",
      *                 type="string",
-     *                 example="Annual Survey"
+     *                 description="Name of the form builder"
      *             ),
      *             @OA\Property(
      *                 property="json_form",
      *                 type="string",
-     *                 example="{'field1': 'value1', 'field2': 'value2'}"
+     *                 description="JSON representation of the form"
      *             ),
      *             @OA\Property(
-     *                 property="active",
+     *                 property="process_flow_id",
+     *                 type="integer",
+     *                 description="Process flow ID"
+     *             ),
+     *             @OA\Property(
+     *                 property="process_flow_step_id",
+     *                 type="integer",
+     *                 description="Process flow step ID"
+     *             ),
+     *             @OA\Property(
+     *                 property="tag_id",
+     *                 type="integer",
+     *                 description="Tag ID"
+     *             ),
+     *             @OA\Property(
+     *                 property="status",
      *                 type="boolean",
-     *                 example=true
+     *                 description="Status of the form builder"
      *             ),
      *             @OA\Property(
-     *                 property="field_structure",
-     *                 type="array",
-     *                 @OA\Items(
-     *                     type="object",
-     *                     @OA\Property(
-     *                         property="fieldId",
-     *                         type="string",
-     *                         example="unique_field_id"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="name",
-     *                         type="string",
-     *                         example="username"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="label",
-     *                         type="string",
-     *                         example="Username"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="inputType",
-     *                         type="string",
-     *                         example="text"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="required",
-     *                         type="boolean",
-     *                         example=true
-     *                     ),
-     *                     @OA\Property(
-     *                         property="placeholder",
-     *                         type="string",
-     *                         example="Enter your username"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="selectable",
-     *                         type="array",
-     *                         @OA\Items(
-     *                             type="object",
-     *                             @OA\Property(
-     *                                 property="optionId",
-     *                                 type="string",
-     *                                 example="option1"
-     *                             ),
-     *                             @OA\Property(
-     *                                 property="label",
-     *                                 type="string",
-     *                                 example="Option 1"
-     *                             ),
-     *                             @OA\Property(
-     *                                 property="value",
-     *                                 type="string",
-     *                                 example="1"
-     *                             ),
-     *                             @OA\Property(
-     *                                 property="selected",
-     *                                 type="boolean",
-     *                                 example=false
-     *                             )
-     *                         )
-     *                     ),
-     *                     @OA\Property(
-     *                         property="range",
-     *                         type="object",
-     *                         @OA\Property(
-     *                             property="min",
-     *                             type="integer",
-     *                             example=1
-     *                         ),
-     *                         @OA\Property(
-     *                             property="max",
-     *                             type="integer",
-     *                             example=10
-     *                         ),
-     *                         @OA\Property(
-     *                             property="step",
-     *                             type="integer",
-     *                             example=1
-     *                         )
-     *                     )
-     *                 )
+     *                 property="created_at",
+     *                 type="string",
+     *                 format="date-time",
+     *                 description="Timestamp of when the form builder was created"
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="string",
+     *                 format="date-time",
+     *                 description="Timestamp of when the form builder was last updated"
      *             )
      *         )
      *     ),
      *     @OA\Response(
-     *         response=201,
-     *         description="A newly created form",
-     *         
-     *     )
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Error message"
+     *             ),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 description="Validation errors"
+     *             )
+     *         )
+     *     ),
+     *     tags={"Forms"}
      * )
      */
-
     public function create(Request $request)
     {
         $form = $this->formService->createForm($request->all());
@@ -181,10 +184,9 @@ class FormController extends Controller
         return response()->json($form, 201);
     }
 
-
     /**
      * @OA\Get(
-     *     path="/api/forms/{id}",
+     *     path="api/forms/{id}",
      *     tags={"Forms"},
      *     summary="Retrieve a form by ID",
      *     description="Returns a single form.",
@@ -218,76 +220,9 @@ class FormController extends Controller
         return new FormResource($form);
     }
 
-
-    /**
-     * @OA\Post(
-     *     path="/forms/{id}/data",
-     *     tags={"Form Data"},
-     *     summary="Store form data",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID of the form to store data for",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             required={"form_field_answers"},
-     *             @OA\Property(
-     *                 property="form_field_answers",
-     *                 type="array",
-     *                 @OA\Items(
-     *                     type="object",
-     *                     @OA\Property(
-     *                         property="fieldId",
-     *                         type="string",
-     *                         example="unique_field_id"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="fieldKey",
-     *                         type="string",
-     *                         example="key1"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="response",
-     *                         type="string",
-     *                         example="answer1"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="question",
-     *                         type="string",
-     *                         example="What is your username?"
-     *                     )
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Form data stored successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/FormResource")
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
-     * )
-     */
-    public function storeData(Request $request, $id)
-    {
-        $data = $request->all();
-        $data['form_builder_id'] = $id;
-        $formData = $this->formService->createFormData($data);
-        FormDataCreated::dispatch($formData->toArray());
-        return response()->json($formData, 201);
-    }
-
     /**
      * @OA\Put(
-     *     path="/forms/update/{id}",
+     *     path="api/forms/update/{id}",
      *     tags={"Forms"},
      *     summary="Update a form",
      *     description="Updates the form with the specified ID.",
@@ -397,26 +332,25 @@ class FormController extends Controller
         if ($update) {
             return response()->json([
                 "status" => "success",
-                "message" => "form updated successfully"
+                "message" => "form updated successfully",
             ], 200);
         }
 
         return response()->json([
             "status" => "error",
-            "message" => "Invalid ID"
+            "message" => "Invalid ID",
         ], 400);
     }
 
-
     /**
      * @OA\Get(
-     *     path="/form/view/{id}/{entity}/{entity_id}",
+     *     path="api/forms/view/{id}/{entity}/{entity_id}",
      *     summary="View a specific form with relationships",
-     *     description="This endpoint allows a user to view a specific form with its relationships. 
+     *     description="This endpoint allows a user to view a specific form with its relationships.
      *                  It checks the access permissions based on the entity and entity_id parameters.",
      *     operationId="viewForm",
      *     tags={"Forms"},
-     *     
+     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -438,17 +372,9 @@ class FormController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     
-     *     @OA\Response(
-     *         response=200,
-     *         description="Form retrieved successfully",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="data", type="object", ref="#/components/schemas/FormResource")
-     *         )
-     *     ),
-     * 
+     *
+     *
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Form retrieved successfully",
@@ -459,7 +385,7 @@ class FormController extends Controller
      *             @OA\Property(property="data", type="object", ref="#/components/schemas/FormResource")
      *         )
      *     ),
-     * 
+     *
      *     @OA\Response(
      *         response=400,
      *         description="Access denied to this form",
@@ -478,7 +404,7 @@ class FormController extends Controller
      *             @OA\Property(property="message", type="string", example="The entity id does not match with the active user")
      *         )
      *     ),
-     *     
+     *
      *     security={
      *         {"bearerAuth": {}}
      *     }
@@ -502,7 +428,7 @@ class FormController extends Controller
             // check if the form has a process_flow_id
 
             if ($getForm->process_flow_id < 1) {
-                // check that there is an active form data 
+                // check that there is an active form data
                 if ($getForm->activeFormdata->count() > 0) {
                     // check if data relationship entity and entity id exist in data before granting user access to form
                     //use array filter to do the check
@@ -516,7 +442,7 @@ class FormController extends Controller
                     if (!empty($checkAccess)) {
                         return $response->additional([
                             'status' => 'success', // or any other status you want to append
-                            'task' => $checkAccess[0] // return the specific task
+                            'task' => $checkAccess[0], // return the specific task
                         ]);
                     }
                     return response()->json([
@@ -532,7 +458,7 @@ class FormController extends Controller
             }
 
             return $response->additional([
-                'status' => 'success' // or any other status you want to append
+                'status' => 'success', // or any other status you want to append
             ]);
         }
     }
