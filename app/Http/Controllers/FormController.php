@@ -180,7 +180,7 @@ class FormController extends Controller
     public function create(Request $request)
     {
         $form = $this->formService->createForm($request->all());
-        FormBuilderCreated::dispatch($form->toArray());
+        //FormBuilderCreated::dispatch($form->toArray());
         return response()->json($form, 201);
     }
 
