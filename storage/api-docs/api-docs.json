@@ -442,6 +442,126 @@
                     }
                 ]
             }
+        },
+        "api/form-data/create": {
+            "post": {
+                "tags": [
+                    "Form Data"
+                ],
+                "summary": "Create or update form data",
+                "description": "This endpoint is used to create new form data or update existing data based on the presence of a process flow ID in the form. If the form does not have a process flow ID, the data will be treated as an update, and a data_id is required.",
+                "operationId": "storeFormData",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "form_builder_id",
+                                    "form_field_answers"
+                                ],
+                                "properties": {
+                                    "form_builder_id": {
+                                        "description": "ID of the form builder",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "form_field_answers": {
+                                        "description": "Array of form field answers",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "field_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "answer": {
+                                                    "type": "string",
+                                                    "example": "Sample answer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "data_id": {
+                                        "description": "ID of the data to update (required if the form does not have a process flow ID)",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Data has been saved and dispatched to the proper channel.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data has been saved and dispatched to the proper channel."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request or validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "data_id is required for this form to be sent"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Something went wrong",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something went wrong, please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

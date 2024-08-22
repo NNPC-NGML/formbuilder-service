@@ -20,7 +20,7 @@ class FormDataController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/form-data/create",
+     *     path="api/form-data/create",
      *     summary="Create or update form data",
      *     description="This endpoint is used to create new form data or update existing data based on the presence of a process flow ID in the form. If the form does not have a process flow ID, the data will be treated as an update, and a data_id is required.",
      *     operationId="storeFormData",
@@ -74,7 +74,7 @@ class FormDataController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response=401,
      *         description="Something went wrong",
      *         @OA\JsonContent(
      *             type="object",
