@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Services\TagService;
+use App\Http\Resources\TagResource;
 
 
 
-class FormDataController extends Controller
+class TagController extends Controller
 {
 
     protected $tagService;
@@ -89,5 +90,10 @@ class FormDataController extends Controller
 
     public function index()
     {
+        // get all tags
+        $tags = $this->tagService->getAllTags();
+        return TagResource::collection($tags)->additional([
+            'status' => 'success', // or any other status you want to append
+        ]);
     }
 }
