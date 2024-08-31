@@ -27,4 +27,8 @@ class FormBuilder extends Model
     {
         return $this->hasMany(FormData::class, 'form_builder_id')->where(["status" => 0]);
     }
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class, 'tag_id');
+    }
 }

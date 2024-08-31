@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Skillz\UserService;
+use App\Models\FormData;
 use Illuminate\Http\Request;
 use App\Services\FormService;
-use App\Http\Resources\FormDataResource;
-use Illuminate\Support\Facades\Auth;
+use App\Jobs\FormData\FormDataCreated;
+use App\Jobs\FormData\FormDataUpdated;
+
 
 class FormDataController extends Controller
 {
@@ -113,6 +114,8 @@ class FormDataController extends Controller
                     "message" => "something went wrong, please try again",
                 ], 400);
             }
+            $this->formService->dispatchFormData("update", $request->data_id);
+
             return response()->json([
                 "status" => "success",
                 "message" => "Data has being saved and dispatched to the proper channel.",
@@ -124,6 +127,7 @@ class FormDataController extends Controller
         // create new data with service createFormData method
         $createFormData = $this->formService->createFormData($request);
         if ($createFormData) {
+            $this->formService->dispatchFormData("create", $createFormData->id);
             return response()->json([
                 "status" => "success",
                 "message" => "Data has being saved and dispatched to the proper channel.",

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\FormBuilder;
+namespace App\Jobs\FormData;
 
 use App\Services\FormService;
 use Illuminate\Bus\Queueable;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class FormDataCreated implements ShouldQueue
+class FormDataUpdated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -38,14 +38,5 @@ class FormDataCreated implements ShouldQueue
      */
     public function handle(): void
     {
-         
-         $service = new FormService();
-         $service->createFormData($this->data);
-
-    }
-
-     public function getData(): array
-    {
-        return $this->data;
     }
 }

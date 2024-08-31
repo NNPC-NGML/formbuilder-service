@@ -2,13 +2,14 @@
 
 namespace Tests\Unit;
 
-use App\Models\FormBuilder;
-use App\Models\FormData;
-use App\Services\FormService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Validation\ValidationException;
+use App\Models\Tag;
 use Tests\TestCase;
+use App\Models\FormData;
+use App\Models\FormBuilder;
+use App\Services\FormService;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 class FormServiceTest extends TestCase
@@ -408,6 +409,18 @@ class FormServiceTest extends TestCase
         $this->assertTrue($updatedFormData);
         $this->assertDatabaseHas("form_data", $newData);
         $this->assertDatabaseMissing("form_data", $data);
+    }
+    public function test_to_see_the_structure_of_data_that_would_be_dispatched()
+    {
+        // create tag
+        $tag = Tag::factory()->create();
+        // create form
+        $form = FormBuilder::factory()->create(["tag_id" => $tag->id]);
+        // create form data
+        $formData = FormData::factory()->create(["form_builder_id" => $form->id]);
+        // dispatch created form data 
+        $service = (new FormService())->dispatchFormData("create", $formData->id);
+        $this->assertInstanceOf(FormData::class, $service);
     }
 
     private function formService()
