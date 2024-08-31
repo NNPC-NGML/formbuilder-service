@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\FormBuilder;
 use App\Models\FormData;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\FormBuilder;
+use App\Jobs\FormData\FormDataCreated;
+use App\Jobs\FormData\FormDataUpdated;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FormService
 {
@@ -58,7 +60,7 @@ class FormService
 
         $validator = Validator::make($data, [
             'form_builder_id' => 'required|exists:form_builders,id',
-            'form_field_answers' => 'required',
+            'form_field_answers' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -128,5 +130,34 @@ class FormService
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Dispatch FormData.
+     * 
+     * @param integer $id the form data id to be updated
+     * @param string $type the type of dispatch either create or update
+     *
+     * @return object \App\Models\FormData.
+     */
+
+    public function dispatchFormData($type, $id): FormData
+    {
+        $model = FormData::where(["id" => $id])->with(["formBuilder.tag"])->first();
+        $response = $model->toArray();
+        if ($type == "create") {
+
+            foreach (config("nnpcreusable.FORM_DATA_CREATED") as $queue) {
+                FormDataCreated::dispatch($response)->onQueue($queue);
+            }
+        }
+
+        if ($type == "update") {
+
+            foreach (config("nnpcreusable.FORM_DATA_UPDATED") as $queue) {
+                FormDataUpdated::dispatch($response)->onQueue($queue);
+            }
+        }
+        return $model;
     }
 }
