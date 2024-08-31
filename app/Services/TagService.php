@@ -27,6 +27,11 @@ class TagService
 
         return false;
     }
+    public function getAllTags()
+    {
+        //get all tags
+        return $this->model()->all();
+    }
 
     private function model()
     {
