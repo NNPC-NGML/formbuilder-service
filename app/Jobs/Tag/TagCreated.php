@@ -3,6 +3,7 @@
 namespace App\Jobs\Tag;
 
 
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
@@ -33,15 +34,14 @@ class TagCreated implements ShouldQueue
         $this->data = $data;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @param UserService $service
-     * @return void
-     */
+
     public function handle(): void
     {
-        // uncomment this code if using inside of form builder service
+        $this->tagService()->createNewTag($this->data);
+    }
 
+    private function tagService()
+    {
+        return new TagService();
     }
 }
