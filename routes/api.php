@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormDataController;
 
@@ -21,6 +22,7 @@ Route::middleware('scope.user')->group(function () {
     Route::get('/protected', function () {
         return response()->json(['message' => 'Access granted']);
     });
+    Route::get('/tag', [TagController::class, 'index'])->name('tag.all');
     Route::get('/forms/{id}', [FormController::class, 'show'])->name('forms.show');
     Route::get('/forms', [FormController::class, 'index'])->name('forms.create');
     Route::put('/forms/update/{id}', [FormController::class, 'update'])->name('forms.update');

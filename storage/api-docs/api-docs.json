@@ -562,6 +562,42 @@
                     }
                 ]
             }
+        },
+        "api/tag": {
+            "post": {
+                "tags": [
+                    "tag"
+                ],
+                "summary": "get all tags",
+                "description": "this endpoint return a json of all tags.",
+                "operationId": "617dbbe6ae664f88a1af5fd864ac6691",
+                "responses": {
+                    "200": {
+                        "description": "Data has been saved and dispatched to the proper channel.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TagResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -599,7 +635,32 @@
                     }
                 },
                 "type": "object"
+            },
+            "TagResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Forms",
+            "description": "Forms"
+        },
+        {
+            "name": "Form Data",
+            "description": "Form Data"
+        },
+        {
+            "name": "tag",
+            "description": "tag"
+        }
+    ]
 }

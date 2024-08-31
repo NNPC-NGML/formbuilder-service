@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 
+use App\Models\Tag;
 use Tests\TestCase;
 use App\Jobs\Tag\TagCreated;
 use App\Services\TagService;
@@ -54,6 +55,14 @@ class TagServiceTest extends TestCase
         $job = new TagCreated($data);
         $job->handle();
         $this->assertDatabaseCount("tags", 1);
+    }
+
+    public function test_to_ensure_all_tag_can_be_fetched()
+    {
+        // create Data
+        Tag::factory(9)->create();
+        $response = $this->tagService()->getAllTags();
+        $this->assertEquals(9, $response->count());
     }
 
     private function tagService()
