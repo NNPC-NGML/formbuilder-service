@@ -40,7 +40,7 @@ class AutomatorTaskCreated implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         // if "formbuilder_data_id" == null create a new form data and dispatch formdata created 
         $this->data["process_flow_step_id"] = $this->data["processflow_step_id"];
