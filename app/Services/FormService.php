@@ -60,7 +60,7 @@ class FormService
 
         $validator = Validator::make($data, [
             'form_builder_id' => 'required|exists:form_builders,id',
-            'form_field_answers' => 'required|string',
+            'form_field_answers' => 'sometimes|string',
         ]);
 
         if ($validator->fails()) {
