@@ -352,9 +352,9 @@ class FormController extends Controller
      *     tags={"Forms"},
      *
      *     @OA\Parameter(
-     *         name="id",
+     *         name="name",
      *         in="path",
-     *         description="ID of the form to view",
+     *         description="the form unique name",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
