@@ -410,7 +410,7 @@ class FormController extends Controller
      *     }
      * )
      */
-    public function view(int $id, string $entity, int $entity_id)
+    public function view(string $id, string $entity, int $entity_id)
     {
 
         $user = auth()->id();

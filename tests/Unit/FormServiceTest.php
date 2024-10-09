@@ -348,7 +348,7 @@ class FormServiceTest extends TestCase
         $form = FormBuilder::factory(3)->create();
         // create new data
         FormData::factory()->create(["form_builder_id" => $form[0]->id]);
-        $service = $this->formService()->getFormWithRelationships($form[0]->id);
+        $service = $this->formService()->getFormWithRelationships($form[0]->name);
         $this->assertInstanceOf(FormData::class, $service->activeFormdata[0]);
     }
 
