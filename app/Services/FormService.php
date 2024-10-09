@@ -37,9 +37,9 @@ class FormService
         return $form;
     }
 
-    public function getFormWithRelationships(int $formId): FormBuilder
+    public function getFormWithRelationships(string $formId): FormBuilder
     {
-        $form = FormBuilder::where(["id" => $formId])->with(["activeFormdata"])->first();
+        $form = FormBuilder::where(["name" => $formId])->with(["activeFormdata"])->first();
 
         if (!$form) {
             throw new ModelNotFoundException("FormBuilder with id $formId not found.");

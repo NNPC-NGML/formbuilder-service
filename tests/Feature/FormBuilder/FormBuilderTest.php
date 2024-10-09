@@ -54,7 +54,7 @@ class FormBuilderTest extends TestCase
         $form = FormBuilder::factory()->create();
         FormData::factory()->create(["form_builder_id" => $form->id]);
         $this->actingAsAuthenticatedTestUser();
-        $response = $this->getJson('/api/forms/view/' . $form->id . "/customer/1");
+        $response = $this->getJson('/api/forms/view/' . $form->name . "/customer/1");
         $response->assertStatus(200);
         $response->assertJsonStructure([
             "status",
@@ -74,7 +74,7 @@ class FormBuilderTest extends TestCase
         $form = FormBuilder::factory()->create(["process_flow_id" => 0]);
         FormData::factory()->create(["form_builder_id" => $form->id, "entity" => "customer", "entity_id" => 1, "user_id" => 1]);
         $this->actingAsAuthenticatedTestUser();
-        $response = $this->getJson('/api/forms/view/' . $form->id . "/customer/1");
+        $response = $this->getJson('/api/forms/view/' . $form->name . "/customer/1");
         $response->assertStatus(200);
         $response->assertJsonStructure([
             "status",

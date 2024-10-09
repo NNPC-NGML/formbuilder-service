@@ -344,9 +344,9 @@
                 "operationId": "viewForm",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "name",
                         "in": "path",
-                        "description": "ID of the form to view",
+                        "description": "the form unique name",
                         "required": true,
                         "schema": {
                             "type": "integer"
