@@ -3,10 +3,13 @@
 namespace App\Jobs\AutomatorTask;
 
 // use App\Models\Designation;
+use App\Models\FormData;
 use App\Models\FormBuilder;
 use App\Services\FormService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\FormData\FormDataCreated;
+use App\Jobs\FormData\FormDataUpdated;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -57,16 +60,20 @@ class AutomatorTaskCreated implements ShouldQueue
                 $this->data["status"] = 0;
                 $createFormData = $this->formService()->createFormData($this->data);
                 if ($createFormData) {
-                    $this->formService()->dispatchFormData("create", $createFormData->id);
+                    $model = FormData::where(["id" => $createFormData->id])->with(["formBuilder.tag"])->first();
+                    $response = $model->toArray();
+                    FormDataUpdated::dispatch($response)->onQueue("automator_queue");
                 }
             }
         } else {
             $this->data["id"] = $this->data["formbuilder_data_id"];
             //get form data and update 
-            $this->data["status"] = 1;
+
             $updateFormData = $this->formService()->updateFormData($this->data["id"], $this->data);
             if ($updateFormData) {
-                $this->formService()->dispatchFormData("update", $this->data["id"]);
+                $model = FormData::where(["id" => $this->data["id"]])->with(["formBuilder.tag"])->first();
+                $response = $model->toArray();
+                FormDataUpdated::dispatch($response)->onQueue("automator_queue");
             }
         }
 

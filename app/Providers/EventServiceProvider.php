@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
-use App\Jobs\Form\FormDataCreated;
-use App\Jobs\Automator\AutomatorTaskBroadcasterJob;
-use App\Jobs\Customer\CustomerTaskBroadcasterJob;
-use App\Jobs\ProcessFlow\ProcessFlowTaskBroadcasterJob;
+use App\Jobs\FormData\FormDataCreated;
 use Illuminate\Auth\Events\Registered;
+use App\Jobs\FormData\FormBuilderNotification;
+use App\Jobs\Customer\CustomerTaskBroadcasterJob;
+use App\Jobs\Automator\AutomatorTaskBroadcasterJob;
+use App\Jobs\ProcessFlow\ProcessFlowTaskBroadcasterJob;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -28,12 +29,11 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \App::bindMethod(FormBuilderNotification::class . '@handle', fn($job) => $job->handle());
         \App::bindMethod(FormDataCreated::class . '@handle', fn($job) => $job->handle());
-        \App::bindMethod(AutomatorTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
-        \App::bindMethod(ProcessFlowTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
-        \App::bindMethod(CustomerTaskBroadcasterJob::class . '@handle', fn ($job) => $job->handle());
-
-
+        \App::bindMethod(AutomatorTaskBroadcasterJob::class . '@handle', fn($job) => $job->handle());
+        \App::bindMethod(ProcessFlowTaskBroadcasterJob::class . '@handle', fn($job) => $job->handle());
+        \App::bindMethod(CustomerTaskBroadcasterJob::class . '@handle', fn($job) => $job->handle());
     }
 
     /**

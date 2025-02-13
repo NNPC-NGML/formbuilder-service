@@ -94,10 +94,10 @@ class FormDataController extends Controller
     {
         // authenticated user
         $user = auth()->id();
-        // if the form has a process flow id 
+
         $formId = $request->form_builder_id;
         $getForm = $this->formService->getForm($formId);
-        //if the form does not have  a process_flow_id, then treat the data as a update 
+        //if the form does not have  a process_flow_id, then treat the data as an update 
         if ($getForm->process_flow_id < 1) {
             // check for the data id to be update, if the value does not exist 
             if (!isset($request->data_id) && $request->data_id < 1) {
@@ -107,7 +107,9 @@ class FormDataController extends Controller
                 ], 400);
             }
             // update data with service updateFormData
-            $updateForm = $this->formService->updateFormData($request->data_id, $request->all());
+            $data = $request->all();
+            $data["status"] = 1;
+            $updateForm = $this->formService->updateFormData($request->data_id, $data);
             if (!$updateForm) {
                 return response()->json([
                     "status" => "error",
@@ -124,6 +126,7 @@ class FormDataController extends Controller
         // create a new form data since the form has a process_flow_id
         $request = $request->all();
         $request["user_id"] = $user;
+
         // create new data with service createFormData method
         $createFormData = $this->formService->createFormData($request);
         if ($createFormData) {
