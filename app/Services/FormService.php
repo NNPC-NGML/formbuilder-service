@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\FormData;
 use App\Models\FormBuilder;
+use Illuminate\Support\Facades\Log;
 use App\Jobs\FormData\FormDataCreated;
 use App\Jobs\FormData\FormDataUpdated;
 use Illuminate\Support\Facades\Validator;
@@ -120,14 +121,49 @@ class FormService
      *
      * @return boolean indicating update was a success.
      */
+    // public function updateFormData(int $id, array $data)
+    // {
+    //     try {
+    //         $formData = $this->getFormData($id);
+    //         if ($formData) {
+    //             return  $formData->update($data);
+    //         }
+    //     } catch (\Exception $e) {
+    //         Log::error('Error updating form data', [
+    //             'error' => $e->getMessage(),
+    //             'trace' => $e->getTraceAsString(),
+    //             'formDataId' => $id,
+    //             'data' => $data
+    //         ]);
+    //         return false;
+    //     }
+    // }
+
     public function updateFormData(int $id, array $data)
     {
+
         try {
             $formData = $this->getFormData($id);
+
             if ($formData) {
-                return  $formData->update($data);
+
+                $data = array_filter($data, function ($value) {
+                    return !is_null($value);
+                });
+
+
+                $update = $formData->update($data);
+                $fetchFormData = $this->getFormData($id);
+
+                return  $update;
             }
         } catch (\Exception $e) {
+            Log::error('Error updating form data', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'formDataId' => $id,
+                'data' => $data
+            ]);
             return false;
         }
     }
@@ -148,13 +184,16 @@ class FormService
         if ($type == "create") {
 
             foreach (config("nnpcreusable.FORM_DATA_CREATED") as $queue) {
-                FormDataCreated::dispatch($response)->onQueue($queue);
+                if ($queue != "processflow_queue") {
+                    FormDataCreated::dispatch($response)->onQueue($queue);
+                }
             }
         }
 
         if ($type == "update") {
 
             foreach (config("nnpcreusable.FORM_DATA_UPDATED") as $queue) {
+
                 FormDataUpdated::dispatch($response)->onQueue($queue);
             }
         }

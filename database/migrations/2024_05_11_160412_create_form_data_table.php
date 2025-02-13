@@ -18,7 +18,7 @@ class CreateFormDataTable extends Migration
             $table->integer('entity_id')->nullable();
             $table->integer('entity_site_id')->nullable();
             $table->integer('user_id');
-            $table->boolean('status')->default(1);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

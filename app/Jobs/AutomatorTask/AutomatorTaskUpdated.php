@@ -20,7 +20,7 @@ class AutomatorTaskUpdated implements ShouldQueue
      * Create a new job instance.
      */
     private $data;
-    private int $id;
+    private  $id;
     public function __construct(array $data)
     {
         $this->data = $data;
@@ -49,16 +49,18 @@ class AutomatorTaskUpdated implements ShouldQueue
                 $this->data["status"] = 0;
                 $createFormData = $this->formService()->createFormData($this->data);
                 if ($createFormData) {
-                    $this->formService()->dispatchFormData("create", $createFormData->id);
+                    $this->formService()->dispatchFormData("update", $createFormData->id);
                 }
             }
         } else {
             $this->data["id"] = $this->data["formbuilder_data_id"];
             //get form data and update 
-            $this->data["status"] = 1;
-            $updateFormData = $this->formService()->updateFormData($this->data["id"], $this->data);
-            if ($updateFormData) {
-                $this->formService()->dispatchFormData("update", $this->data["id"]);
+            if (!is_null($this->data["form_field_answers"])) {
+                $this->data["status"] = 1;
+                $updateFormData = $this->formService()->updateFormData($this->data["id"], $this->data);
+                if ($updateFormData) {
+                    $this->formService()->dispatchFormData("update", $this->data["id"]);
+                }
             }
         }
 

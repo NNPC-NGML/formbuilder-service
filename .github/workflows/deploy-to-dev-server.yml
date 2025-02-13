@@ -55,12 +55,12 @@ jobs:
 
       - name: Find and replace nnpc reusable env variables
         run: |
-          sed -i -e 's:FORM_BUILDER_CREATED=forge:FORM_BUILDER_CREATED=Customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
-          sed -i -e 's:FORM_BUILDER_UPDATED=forge:FORM_BUILDER_UPDATED=Customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
-          sed -i -e 's:FORM_BUILDER_DELETED=forge:FORM_BUILDER_DELETED=Customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
-          sed -i -e 's:FORM_DATA_CREATED=forge:FORM_DATA_CREATED=Customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
-          sed -i -e 's:FORM_DATA_UPDATED=forge:FORM_DATA_UPDATED=Customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
-          sed -i -e 's:FORM_DATA_DELETED=forge:FORM_DATA_DELETED=Customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env 
+          sed -i -e 's:FORM_BUILDER_CREATED=forge:FORM_BUILDER_CREATED=customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
+          sed -i -e 's:FORM_BUILDER_UPDATED=forge:FORM_BUILDER_UPDATED=customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
+          sed -i -e 's:FORM_BUILDER_DELETED=forge:FORM_BUILDER_DELETED=customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
+          sed -i -e 's:FORM_DATA_CREATED=forge:FORM_DATA_CREATED=customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
+          sed -i -e 's:FORM_DATA_UPDATED=forge:FORM_DATA_UPDATED=customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env &&
+          sed -i -e 's:FORM_DATA_DELETED=forge:FORM_DATA_DELETED=customer_queue,gas_queue,billing_queue,processflow_queue,automator_queue:g' .env 
           
         
           

@@ -410,7 +410,7 @@ class FormController extends Controller
      *     }
      * )
      */
-    public function view(string $id, string $entity, int $entity_id)
+    public function view(string $id, string $entity, int $entity_id, int $entity_site_id = 0)
     {
 
         $user = auth()->id();
@@ -432,13 +432,14 @@ class FormController extends Controller
                 if ($getForm->activeFormdata->count() > 0) {
                     // check if data relationship entity and entity id exist in data before granting user access to form
                     //use array filter to do the check
-                    $checkAccess = array_filter($getForm->activeFormdata->toArray(), function ($formData) use ($entity, $entity_id, $user) {
+                    $checkAccess = array_values(array_filter($getForm->activeFormdata->toArray(), function ($formData) use ($entity, $entity_id, $user, $entity_site_id) {
                         return isset($formData['entity'])
                             && isset($formData['entity_id'])
-                            && $formData['entity'] === $entity
+                            && ucfirst($formData['entity'])  == ucfirst($entity)
                             && $formData['entity_id'] == $entity_id
+                            && $formData['entity_site_id'] == $entity_site_id
                             && $formData['user_id'] == $user;
-                    });
+                    }));
                     if (!empty($checkAccess)) {
                         return $response->additional([
                             'status' => 'success', // or any other status you want to append
@@ -447,11 +448,13 @@ class FormController extends Controller
                     }
                     return response()->json([
                         "status" => "error",
+                        "error_message" => "you do not have access to this form 1",
                         "message" => "you do not have access to this form",
                     ], 400);
                 } else {
                     return response()->json([
                         "status" => "error",
+                        "error_message" => "you do not have access to this form 2",
                         "message" => "you do not have access to this form",
                     ], 400);
                 }
